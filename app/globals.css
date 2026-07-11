@@ -348,6 +348,94 @@ p {
   margin-bottom: 6px;
 }
 
+/* About */
+.about-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 32px;
+  max-width: 980px;
+  margin: 0 auto;
+}
+
+.about-grid p {
+  color: var(--color-ink-soft);
+}
+
+/* Steps */
+.steps-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 32px;
+}
+
+.step-item {
+  position: relative;
+  padding-left: 4px;
+}
+
+.step-item__num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid var(--color-accent);
+  color: var(--color-accent);
+  font-family: var(--font-serif);
+  font-size: 1.1rem;
+  margin-bottom: 12px;
+}
+
+.step-item h3 {
+  font-size: 1.05rem;
+}
+
+.step-item p {
+  color: var(--color-ink-soft);
+  font-size: 0.92rem;
+}
+
+/* Testimonials */
+.testimonial-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 24px;
+}
+
+.testimonial-card {
+  background: var(--color-card);
+  border: 1px solid var(--color-line);
+  padding: 28px;
+  margin: 0;
+}
+
+.testimonial-card__stars {
+  color: var(--color-accent);
+  letter-spacing: 2px;
+  margin-bottom: 12px;
+}
+
+.testimonial-card blockquote {
+  margin: 0 0 16px;
+  color: var(--color-ink-soft);
+  font-style: italic;
+}
+
+.testimonial-card figcaption {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.85rem;
+}
+
+.testimonial-card figcaption strong {
+  color: var(--color-ink);
+}
+
+.testimonial-card figcaption span {
+  color: var(--color-ink-soft);
+}
+
 /* Ornament divider */
 .ornament {
   display: flex;

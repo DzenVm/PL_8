@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { contact } from "@/lib/contact";
 
 export const metadata: Metadata = {
   title: "Kontakt",
@@ -29,23 +30,23 @@ export default function ContactPage() {
           <div className="prose">
             <h2>Dane kontaktowe</h2>
             <p>
-              <strong>Telefon:</strong>{" "}
-              <a href="tel:+48221234567">+48 22 123 45 67</a>
+              <strong>Telefon (biuro):</strong>{" "}
+              <a href={contact.phoneHref}>{contact.phoneDisplay}</a>
+              <br />
+              <strong>Telefon/WhatsApp (rezerwacje last-minute):</strong>{" "}
+              <a href={contact.mobileHref}>{contact.mobileDisplay}</a>
               <br />
               <strong>E-mail:</strong>{" "}
-              <a href="mailto:kontakt@wycieczki-warszawa.example">
-                kontakt@wycieczki-warszawa.example
-              </a>
+              <a href={`mailto:${contact.email}`}>{contact.email}</a>
               <br />
-              <strong>Godziny pracy biura:</strong> poniedziałek–piątek,
-              9:00–17:00
+              <strong>Godziny pracy biura:</strong> {contact.hours}
             </p>
 
             <h2>Adres biura</h2>
             <p>
-              ul. Marszałkowska 10
+              {contact.street}
               <br />
-              00-590 Warszawa
+              {contact.postalCode} {contact.city}
               <br />
               Polska
             </p>
@@ -58,16 +59,35 @@ export default function ContactPage() {
               proponowanego terminu oraz danych kontaktowych osoby
               odpowiedzialnej za rezerwację.
             </p>
+
+            <h2>Dane firmy</h2>
+            <p>
+              NIP: {contact.nip}
+              <br />
+              REGON: {contact.regon}
+            </p>
           </div>
 
           <aside className="info-card">
             <span className="eyebrow">Szybki kontakt</span>
             <p style={{ marginTop: "16px" }}>
               Najszybciej odpowiadamy na zapytania telefoniczne w godzinach
-              pracy biura.
+              pracy biura. Poza godzinami pracy napisz SMS lub WhatsApp na
+              numer kontaktowy — oddzwonimy następnego dnia roboczego.
             </p>
-            <a href="tel:+48221234567" className="btn btn--primary" style={{ width: "100%" }}>
+            <a
+              href={contact.phoneHref}
+              className="btn btn--primary"
+              style={{ width: "100%", marginBottom: "12px" }}
+            >
               Zadzwoń teraz
+            </a>
+            <a
+              href={`mailto:${contact.email}`}
+              className="btn btn--outline"
+              style={{ width: "100%" }}
+            >
+              Napisz e-mail
             </a>
           </aside>
         </div>

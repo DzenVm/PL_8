@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { tours } from "@/lib/tours";
+import { contact } from "@/lib/contact";
 
 export default function Footer() {
   const year = new Date().getFullYear();
@@ -38,16 +39,19 @@ export default function Footer() {
           <div>
             <h4>Kontakt</h4>
             <ul>
-              <li>ul. Marszałkowska 10, 00-590 Warszawa</li>
               <li>
-                <a href="tel:+48221234567">+48 22 123 45 67</a>
+                {contact.street}, {contact.postalCode} {contact.city}
               </li>
               <li>
-                <a href="mailto:kontakt@wycieczki-warszawa.example">
-                  kontakt@wycieczki-warszawa.example
-                </a>
+                <a href={contact.phoneHref}>{contact.phoneDisplay}</a>
               </li>
-              <li>Pon.–pt. 9:00–17:00</li>
+              <li>
+                <a href={contact.mobileHref}>{contact.mobileDisplay}</a> (SMS/WhatsApp)
+              </li>
+              <li>
+                <a href={`mailto:${contact.email}`}>{contact.email}</a>
+              </li>
+              <li>{contact.hours}</li>
             </ul>
           </div>
         </div>
@@ -57,7 +61,7 @@ export default function Footer() {
             Ceny mają charakter orientacyjny i mogą różnić się w zależności od
             terminu oraz wielkości grupy. Organizator wycieczek pieszych po
             Warszawie działający na podstawie obowiązujących przepisów prawa
-            polskiego.
+            polskiego. NIP {contact.nip}, REGON {contact.regon}.
           </span>
         </div>
       </div>

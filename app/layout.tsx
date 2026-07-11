@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import CookieConsent from "@/components/CookieConsent";
+import { contact } from "@/lib/contact";
 import "./globals.css";
 
 const siteUrl = "https://wycieczki-warszawa.example";
@@ -40,12 +41,13 @@ const organizationJsonLd = {
     "Organizator pieszych wycieczek z przewodnikiem po Warszawie.",
   address: {
     "@type": "PostalAddress",
-    streetAddress: "ul. Marszałkowska 10",
-    postalCode: "00-590",
-    addressLocality: "Warszawa",
+    streetAddress: contact.street,
+    postalCode: contact.postalCode,
+    addressLocality: contact.city,
     addressCountry: "PL",
   },
-  telephone: "+48221234567",
+  telephone: contact.phoneHref.replace("tel:", ""),
+  email: contact.email,
   areaServed: "Warszawa",
   priceRange: "69-95 PLN",
 };

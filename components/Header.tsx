@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { contact } from "@/lib/contact";
 
 const navLinks = [
   { href: "/#wycieczki", label: "Wycieczki" },
@@ -22,8 +23,8 @@ export default function Header() {
           </ul>
         </nav>
         <div className="header-cta">
-          <a href="tel:+48221234567" className="btn btn--outline">
-            +48 22 123 45 67
+          <a href={contact.phoneHref} className="btn btn--outline">
+            {contact.phoneDisplay}
           </a>
         </div>
       </div>

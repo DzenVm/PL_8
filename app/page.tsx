@@ -2,6 +2,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { tours } from "@/lib/tours";
 import TourCard from "@/components/TourCard";
+import { testimonials } from "@/lib/testimonials";
+import { contact } from "@/lib/contact";
 
 const usps = [
   {
@@ -26,11 +28,33 @@ const usps = [
   },
 ];
 
+const steps = [
+  {
+    title: "Wybierz trasę",
+    description:
+      "Przejrzyj pięć wycieczek i wybierz tę, która najlepiej odpowiada Twoim zainteresowaniom i czasowi pobytu w Warszawie.",
+  },
+  {
+    title: "Skontaktuj się z nami",
+    description:
+      "Zadzwoń, napisz SMS/WhatsApp lub e-mail, podając liczbę osób i preferowany termin. Odpowiadamy zwykle tego samego dnia roboczego.",
+  },
+  {
+    title: "Potwierdzenie terminu",
+    description:
+      "Potwierdzamy dostępność, miejsce i godzinę zbiórki. Płatność ustalamy indywidualnie — gotówką lub przelewem przed wycieczką.",
+  },
+  {
+    title: "Spotykamy się na trasie",
+    description:
+      "Przewodnik czeka w umówionym miejscu i prowadzi grupę przez całą trasę, dbając o tempo dostosowane do uczestników.",
+  },
+];
+
 const faqs = [
   {
     question: "Jak zarezerwować wycieczkę?",
-    answer:
-      "Zadzwoń pod numer +48 22 123 45 67 lub napisz na adres kontakt@wycieczki-warszawa.example, podając wybraną trasę, liczbę osób i preferowany termin. Potwierdzimy dostępność w ciągu 24 godzin roboczych.",
+    answer: `Zadzwoń pod numer ${contact.phoneDisplay}, napisz SMS/WhatsApp na ${contact.mobileDisplay} lub e-mail na adres ${contact.email}, podając wybraną trasę, liczbę osób i preferowany termin. Potwierdzimy dostępność w ciągu 24 godzin roboczych.`,
   },
   {
     question: "Czy wycieczki odbywają się w każdą pogodę?",
@@ -51,6 +75,21 @@ const faqs = [
     question: "Czy w cenę wliczone są bilety wstępu?",
     answer:
       "Zależy od trasy — szczegóły znajdziesz w sekcji „Co zawiera cena” na stronie każdej wycieczki. Część tras obejmuje bilety wstępu, część nie.",
+  },
+  {
+    question: "Ile osób może wziąć udział w jednej wycieczce?",
+    answer:
+      "W zależności od trasy grupa liczy od 12 do 20 osób. Przy większej liczbie chętnych organizujemy dodatkowy termin lub drugiego przewodnika.",
+  },
+  {
+    question: "Czy można połączyć kilka wycieczek w jeden dzień?",
+    answer:
+      "Tak, wiele osób łączy np. Stare Miasto z Łazienkami tego samego dnia. Zapytaj przy rezerwacji, a zaproponujemy dogodny plan zwiedzania.",
+  },
+  {
+    question: "Jak wygląda płatność?",
+    answer:
+      "Płatność ustalamy indywidualnie przy potwierdzeniu rezerwacji — gotówką w dniu wycieczki lub przelewem na wskazany numer konta.",
   },
 ];
 
@@ -82,9 +121,9 @@ export default function HomePage() {
             <Link href="#wycieczki" className="btn btn--primary">
               Zobacz wycieczki
             </Link>
-            <Link href="/kontakt" className="btn btn--outline">
-              Zapytaj o termin
-            </Link>
+            <a href={contact.phoneHref} className="btn btn--outline">
+              Zadzwoń: {contact.phoneDisplay}
+            </a>
           </div>
           <div className="hero__badges">
             <div className="hero__badge">
@@ -98,6 +137,10 @@ export default function HomePage() {
             <div className="hero__badge">
               <strong>do 20 os.</strong>
               wielkość grupy
+            </div>
+            <div className="hero__badge">
+              <strong>11 lat</strong>
+              doświadczenia w oprowadzaniu
             </div>
           </div>
         </div>
@@ -152,7 +195,75 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="section" id="faq">
+      <section className="section">
+        <div className="container">
+          <div className="section-heading">
+            <span className="eyebrow">O nas</span>
+            <h2>Warszawa opowiedziana przez ludzi, którzy ją znają</h2>
+          </div>
+          <div className="about-grid">
+            <p>
+              Od 2015 roku oprowadzamy mieszkańców Polski i turystów
+              zagranicznych po Warszawie — od odbudowanej starówki, przez
+              miejsca związane z Powstaniem Warszawskim, po królewskie
+              rezydencje w Łazienkach i Wilanowie. Współpracujemy wyłącznie z
+              licencjonowanymi przewodnikami miejskimi, którzy łączą wiedzę
+              historyczną z umiejętnością ciekawego opowiadania.
+            </p>
+            <p>
+              Stawiamy na małe grupy i kontakt z uczestnikami — zamiast
+              wyuczonej formułki, każda wycieczka jest żywą rozmową o mieście,
+              jego historii i codziennym życiu mieszkańców. Rocznie
+              oprowadzamy kilka tysięcy osób: rodziny, pary, grupy szkolne i
+              zespoły firmowe.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section className="section section--alt">
+        <div className="container">
+          <div className="section-heading">
+            <span className="eyebrow">Jak to działa</span>
+            <h2>Rezerwacja w czterech krokach</h2>
+          </div>
+          <div className="steps-grid">
+            {steps.map((step, index) => (
+              <div className="step-item" key={step.title}>
+                <span className="step-item__num">{index + 1}</span>
+                <h3>{step.title}</h3>
+                <p>{step.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="section" id="opinie">
+        <div className="container">
+          <div className="section-heading">
+            <span className="eyebrow">Opinie uczestników</span>
+            <h2>Co mówią osoby, które były z nami na trasie</h2>
+          </div>
+          <div className="testimonial-grid">
+            {testimonials.map((testimonial) => (
+              <figure className="testimonial-card" key={testimonial.name}>
+                <div className="testimonial-card__stars" aria-hidden="true">
+                  {"★".repeat(testimonial.rating)}
+                  {"☆".repeat(5 - testimonial.rating)}
+                </div>
+                <blockquote>&bdquo;{testimonial.quote}&ldquo;</blockquote>
+                <figcaption>
+                  <strong>{testimonial.name}</strong>
+                  <span>{testimonial.tour}</span>
+                </figcaption>
+              </figure>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="section section--alt" id="faq">
         <div className="container">
           <div className="section-heading">
             <span className="eyebrow">Najczęstsze pytania</span>
@@ -176,9 +287,14 @@ export default function HomePage() {
             Napisz lub zadzwoń — pomożemy dobrać trasę odpowiednią dla Twojej
             grupy i ustalić dogodny termin.
           </p>
-          <Link href="/kontakt" className="btn btn--primary">
-            Przejdź do kontaktu
-          </Link>
+          <div className="hero__actions" style={{ justifyContent: "center" }}>
+            <a href={contact.phoneHref} className="btn btn--primary">
+              Zadzwoń: {contact.phoneDisplay}
+            </a>
+            <Link href="/kontakt" className="btn btn--outline" style={{ borderColor: "#fff", color: "#fff" }}>
+              Przejdź do kontaktu
+            </Link>
+          </div>
         </div>
       </section>
     </>

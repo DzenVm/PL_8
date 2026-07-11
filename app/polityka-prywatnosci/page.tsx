@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { contact } from "@/lib/contact";
 
 export const metadata: Metadata = {
   title: "Polityka prywatności",
@@ -26,12 +27,10 @@ export default function PrivacyPolicyPage() {
           <p>
             Administratorem danych osobowych przetwarzanych w związku z
             kontaktem poprzez telefon lub e-mail jest organizator wycieczek
-            pieszych po Warszawie, z siedzibą przy ul. Marszałkowskiej 10,
-            00-590 Warszawa. Kontakt w sprawach ochrony danych:{" "}
-            <a href="mailto:kontakt@wycieczki-warszawa.example">
-              kontakt@wycieczki-warszawa.example
-            </a>
-            .
+            pieszych po Warszawie, z siedzibą przy {contact.street},{" "}
+            {contact.postalCode} {contact.city}. Kontakt w sprawach ochrony
+            danych:{" "}
+            <a href={`mailto:${contact.email}`}>{contact.email}</a>.
           </p>
 
           <h2>2. Jakie dane przetwarzamy</h2>
@@ -76,11 +75,9 @@ export default function PrivacyPolicyPage() {
             prawo dostępu do danych, ich sprostowania, usunięcia, ograniczenia
             przetwarzania oraz wniesienia sprzeciwu. W tym celu skontaktuj się
             z nami pod adresem{" "}
-            <a href="mailto:kontakt@wycieczki-warszawa.example">
-              kontakt@wycieczki-warszawa.example
-            </a>
-            . Przysługuje Ci również prawo wniesienia skargi do Prezesa Urzędu
-            Ochrony Danych Osobowych.
+            <a href={`mailto:${contact.email}`}>{contact.email}</a>. Przysługuje
+            Ci również prawo wniesienia skargi do Prezesa Urzędu Ochrony Danych
+            Osobowych.
           </p>
 
           <h2>6. Zmiany polityki</h2>
