@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { tours } from "@/lib/tours";
+import { services } from "@/lib/services";
 import { contact } from "@/lib/contact";
 
 export default function Footer() {
@@ -10,43 +10,41 @@ export default function Footer() {
       <div className="container">
         <div className="footer-grid">
           <div>
-            <h4>Wycieczki</h4>
+            <h4>Послуги</h4>
             <ul>
-              {tours.map((tour) => (
-                <li key={tour.slug}>
-                  <Link href={`/wycieczki/${tour.slug}`}>{tour.title}</Link>
+              {services.map((service) => (
+                <li key={service.slug}>
+                  <Link href={`/poslugy/${service.slug}`}>{service.title}</Link>
                 </li>
               ))}
             </ul>
           </div>
           <div>
-            <h4>Informacje</h4>
+            <h4>Інформація</h4>
             <ul>
               <li>
-                <Link href="/kontakt">Kontakt</Link>
+                <Link href="/pro-studiyu">Про студію</Link>
               </li>
               <li>
-                <Link href="/regulamin">Regulamin</Link>
+                <Link href="/kontakty">Контакти</Link>
               </li>
               <li>
-                <Link href="/polityka-prywatnosci">Polityka prywatności</Link>
+                <Link href="/polityka-konfidentsiynosti">
+                  Політика конфіденційності
+                </Link>
               </li>
               <li>
-                <Link href="/polityka-cookies">Polityka cookies</Link>
+                <Link href="/polityka-cookies">Політика cookies</Link>
               </li>
             </ul>
           </div>
           <div>
-            <h4>Kontakt</h4>
+            <h4>Контакти</h4>
             <ul>
-              <li>
-                {contact.street}, {contact.postalCode} {contact.city}
-              </li>
+              <li>{contact.legalName}</li>
+              <li>{contact.region}</li>
               <li>
                 <a href={contact.phoneHref}>{contact.phoneDisplay}</a>
-              </li>
-              <li>
-                <a href={contact.mobileHref}>{contact.mobileDisplay}</a> (SMS/WhatsApp)
               </li>
               <li>
                 <a href={`mailto:${contact.email}`}>{contact.email}</a>
@@ -56,12 +54,10 @@ export default function Footer() {
           </div>
         </div>
         <div className="footer-bottom">
-          <span>© {year} Wycieczki po Warszawie. Wszelkie prawa zastrzeżone.</span>
+          <span>© {year} [НАЗВА СТУДІЇ]. Усі права захищені.</span>
           <span className="footer-note">
-            Ceny mają charakter orientacyjny i mogą różnić się w zależności od
-            terminu oraz wielkości grupy. Organizator wycieczek pieszych po
-            Warszawie działający na podstawie obowiązujących przepisów prawa
-            polskiego. NIP {contact.nip}, REGON {contact.regon}.
+            Вартість послуг на сайті орієнтовна й уточнюється після заміру та
+            узгодження технічного завдання. {contact.legalName}, {contact.edrpou}.
           </span>
         </div>
       </div>

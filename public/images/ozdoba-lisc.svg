@@ -1,9 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 60" role="img" aria-labelledby="ornamentTitle">
-  <title id="ornamentTitle">Ozdobny motyw roślinny</title>
-  <path d="M10,30 C50,5 150,5 190,30 C150,55 50,55 10,30 Z" fill="none" stroke="#a68a63" stroke-width="2"/>
-  <circle cx="100" cy="30" r="5" fill="#a68a63"/>
-  <circle cx="60" cy="24" r="3" fill="#a68a63"/>
-  <circle cx="140" cy="24" r="3" fill="#a68a63"/>
-  <circle cx="60" cy="36" r="3" fill="#a68a63"/>
-  <circle cx="140" cy="36" r="3" fill="#a68a63"/>
-</svg>

@@ -6,6 +6,6 @@ export default function robots(): MetadataRoute.Robots {
       userAgent: "*",
       allow: "/",
     },
-    sitemap: "https://studiadesi.site/sitemap.xml",
+    sitemap: "https://studio-interier.example/sitemap.xml",
   };
 }

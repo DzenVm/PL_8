@@ -6,42 +6,42 @@ import CookieConsent from "@/components/CookieConsent";
 import { contact } from "@/lib/contact";
 import "./globals.css";
 
-const siteUrl = "https://studiadesi.site";
+const siteUrl = "https://studio-interier.example";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "Wycieczki po Warszawie z przewodnikiem | 5 tras do wyboru",
-    template: "%s | Wycieczki po Warszawie",
+    default: "Дизайн інтер'єру — 5 напрямків послуг | Консультація дизайнера",
+    template: "%s | Дизайн інтер'єру",
   },
   description:
-    "Piesze wycieczki po Warszawie z licencjonowanym przewodnikiem: Stare Miasto, Trakt Królewski, Powstanie Warszawskie, Łazienki, Praga i Wilanów. Grupy do 20 osób.",
+    "Дизайн квартири, будинку, комерційного приміщення та окремих кімнат. Планування, 3D-візуалізація, робоча документація, авторський нагляд. Орієнтовні ціни на сайті.",
   keywords: [
-    "wycieczki po Warszawie",
-    "przewodnik Warszawa",
-    "zwiedzanie Warszawy",
-    "Stare Miasto Warszawa",
-    "wycieczka Trakt Królewski",
+    "дизайн інтер'єру",
+    "дизайн квартири",
+    "дизайн будинку",
+    "3D-візуалізація інтер'єру",
+    "дизайнер інтер'єру Київ",
   ],
   alternates: {
     canonical: "/",
   },
   openGraph: {
     type: "website",
-    locale: "pl_PL",
+    locale: "uk_UA",
     url: siteUrl,
-    siteName: "Wycieczki po Warszawie",
-    title: "Wycieczki po Warszawie z przewodnikiem",
+    siteName: "Дизайн інтер'єру",
+    title: "Дизайн інтер'єру — 5 напрямків послуг",
     description:
-      "5 tras spacerowych po Warszawie z licencjonowanym przewodnikiem. Sprawdź terminy i rezerwuj miejsce.",
-    images: ["/images/warszawa-panorama.svg"],
+      "Планування, 3D-візуалізація, робоча документація та авторський нагляд. Орієнтовні ціни та терміни на сайті.",
+    images: ["/images/planuvannya-liniyy.svg"],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Wycieczki po Warszawie z przewodnikiem",
+    title: "Дизайн інтер'єру — 5 напрямків послуг",
     description:
-      "5 tras spacerowych po Warszawie z licencjonowanym przewodnikiem.",
-    images: ["/images/warszawa-panorama.svg"],
+      "Планування, 3D-візуалізація, робоча документація та авторський нагляд.",
+    images: ["/images/planuvannya-liniyy.svg"],
   },
   robots: {
     index: true,
@@ -51,44 +51,24 @@ export const metadata: Metadata = {
 
 const organizationJsonLd = {
   "@context": "https://schema.org",
-  "@type": "LocalBusiness",
-  name: "Wycieczki po Warszawie",
+  "@type": "ProfessionalService",
+  name: "[НАЗВА СТУДІЇ]",
+  legalName: contact.legalName,
   description:
-    "Organizator pieszych wycieczek z przewodnikiem po Warszawie.",
+    "Студія дизайну інтер'єру: дизайн квартир, будинків, комерційних приміщень, окремих кімнат та 3D-візуалізація.",
   url: siteUrl,
   address: {
     "@type": "PostalAddress",
-    streetAddress: contact.street,
-    postalCode: contact.postalCode,
     addressLocality: contact.city,
-    addressCountry: "PL",
+    addressCountry: "UA",
   },
   telephone: contact.phoneHref.replace("tel:", ""),
   email: contact.email,
   areaServed: {
-    "@type": "City",
-    name: "Warszawa",
+    "@type": "AdministrativeArea",
+    name: contact.region,
   },
-  geo: {
-    "@type": "GeoCoordinates",
-    latitude: 52.2297,
-    longitude: 21.0122,
-  },
-  openingHoursSpecification: [
-    {
-      "@type": "OpeningHoursSpecification",
-      dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
-      opens: "09:00",
-      closes: "17:00",
-    },
-    {
-      "@type": "OpeningHoursSpecification",
-      dayOfWeek: ["Saturday"],
-      opens: "10:00",
-      closes: "14:00",
-    },
-  ],
-  priceRange: "69-95 PLN",
+  priceRange: "від 750 грн/м²",
 };
 
 function serializeJsonLd(data: unknown) {
@@ -106,7 +86,7 @@ export default async function RootLayout({
   const nonce = (await headers()).get("x-nonce") ?? undefined;
 
   return (
-    <html lang="pl">
+    <html lang="uk">
       <body>
         <script
           type="application/ld+json"

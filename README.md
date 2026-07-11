@@ -1,39 +1,41 @@
-# Wycieczki po Warszawie
+# Дизайн інтер'єру — сайт студії
 
-Serwis SSR (Next.js App Router) prezentujący 5 pieszych wycieczek po Warszawie. Treść w języku polskim, bez zależności od CDN — wszystkie zasoby (style, ikony, obrazy SVG) są serwowane lokalnie.
+SSR-сайт (Next.js App Router) студії дизайну інтер'єру з п'ятьма напрямками послуг. Українською мовою, без залежності від CDN — усі ресурси (стилі, іконки, SVG-зображення) обслуговуються локально.
 
-## Uruchomienie lokalne
+## Локальний запуск
 
 ```bash
 npm install
 npm run dev
 ```
 
-Aplikacja domyślnie działa pod adresem [http://localhost:3000](http://localhost:3000).
+Застосунок за замовчуванням доступний на [http://localhost:3000](http://localhost:3000).
 
-## Build produkcyjny
+## Продакшн-білд
 
 ```bash
 npm run build
 npm run start
 ```
 
-## Struktura
+## Структура
 
-- `app/page.tsx` — strona główna (landing pod kampanie Google Ads)
-- `app/wycieczki/[slug]` — podstrony pięciu wycieczek (SSR + `generateStaticParams`)
-- `app/kontakt`, `app/regulamin`, `app/polityka-prywatnosci`, `app/polityka-cookies` — strony informacyjne
-- `app/icon.svg`, `app/apple-icon.svg` — favicon (Next.js file-convention)
-- `components/CookieConsent.tsx` — baner zgody na cookies (przyciski: akceptuj / odrzuć / ustawienia)
-- `lib/tours.ts` — dane pięciu wycieczek
-- `lib/contact.ts` — jedno źródło danych kontaktowych (telefon, e-mail, adres, NIP/REGON)
-- `proxy.ts` — generuje nonce i nagłówek CSP per-request (Next.js 16 "proxy", dawniej middleware)
-- `next.config.ts` — pozostałe nagłówki bezpieczeństwa (HSTS, X-Frame-Options i inne)
+- `app/page.tsx` — головна сторінка (landing під кампанії Google Ads)
+- `app/poslugy/[slug]` — підсторінки п'яти напрямків послуг (SSR + `generateStaticParams`)
+- `app/pro-studiyu`, `app/kontakty`, `app/polityka-konfidentsiynosti`, `app/polityka-cookies` — інформаційні сторінки
+- `app/icon.svg`, `app/apple-icon.svg` — фавікон (Next.js file-convention)
+- `components/CookieConsent.tsx` — банер згоди на cookies (кнопки: прийняти / відхилити / налаштування)
+- `lib/services.ts` — дані п'яти напрямків послуг та етапів роботи
+- `lib/contact.ts` — єдине джерело контактних даних (телефон, e-mail, регіон, юр. форма)
+- `proxy.ts` — генерує nonce і заголовок CSP на кожен запит (Next.js 16 "proxy", раніше middleware)
+- `next.config.ts` — інші заголовки безпеки (HSTS, X-Frame-Options та інші)
 
-## Uwagi
+## Примітки
 
-- Domena docelowa: `studiadesi.site` (ustawiona w `app/layout.tsx`, `app/sitemap.ts`, `app/robots.ts`).
-- Brak logo/marki celowo — miejsce na logo w nagłówku pozostaje puste.
-- Brak Google Analytics, pikseli reklamowych i skryptów firm trzecich — zgodnie z opisem w polityce cookies.
-- CSP używa nonce generowanego w `proxy.ts` (bez `unsafe-inline` dla skryptów), dlatego strony renderowane są dynamicznie (SSR) zamiast w pełni statycznie.
-- Gotowe do wdrożenia na Vercel bez dodatkowej konfiguracji.
+- Домен-плейсхолдер: `studio-interier.example` (вказано в `app/layout.tsx`, `app/sitemap.ts`, `app/robots.ts`) — замінити на реальний домен перед деплоєм.
+- Назви студії та лого навмисно немає — у шапці текстовий плейсхолдер `[НАЗВА СТУДІЇ]`, юридична назва (ФОП-плейсхолдер) — у футері та реквізитах.
+- Жодних назв брендів меблів/сантехніки/матеріалів у контенті — тільки типи матеріалів і стилі.
+- Немає Google Analytics, рекламних пікселів чи скриптів третіх сторін — відповідно до опису в політиці cookies.
+- Ціни на кожному напрямку — орієнтовні вилки з приміткою, що фінальна вартість визначається після заміру.
+- CSP використовує nonce, згенерований у `proxy.ts` (без `unsafe-inline` для скриптів), тому сторінки рендеряться динамічно (SSR) замість повністю статичних.
+- Готовий до деплою на Vercel без додаткової конфігурації.

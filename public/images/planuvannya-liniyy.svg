@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 620" role="img" aria-labelledby="floorplanTitle">
+  <title id="floorplanTitle">Абстрактне лінійне креслення планування приміщення</title>
+  <rect width="520" height="620" fill="none"/>
+
+  <!-- outer walls -->
+  <rect x="40" y="40" width="440" height="540" fill="none" stroke="#1b1c18" stroke-width="3"/>
+
+  <!-- interior partitions -->
+  <line x1="40" y1="240" x2="300" y2="240" stroke="#1b1c18" stroke-width="2"/>
+  <line x1="300" y1="40" x2="300" y2="420" stroke="#1b1c18" stroke-width="2"/>
+  <line x1="300" y1="420" x2="480" y2="420" stroke="#1b1c18" stroke-width="2"/>
+  <line x1="180" y1="240" x2="180" y2="580" stroke="#1b1c18" stroke-width="2"/>
+
+  <!-- door swings -->
+  <path d="M180,300 A60,60 0 0 1 240,240" fill="none" stroke="#55603f" stroke-width="1.5"/>
+  <path d="M300,300 A50,50 0 0 0 350,250" fill="none" stroke="#55603f" stroke-width="1.5"/>
+  <path d="M120,240 A40,40 0 0 1 160,200" fill="none" stroke="#55603f" stroke-width="1.5"/>
+
+  <!-- furniture: bed -->
+  <rect x="70" y="70" width="120" height="90" fill="none" stroke="#55603f" stroke-width="1.5"/>
+  <line x1="70" y1="100" x2="190" y2="100" stroke="#55603f" stroke-width="1"/>
+
+  <!-- furniture: table -->
+  <circle cx="380" cy="120" r="45" fill="none" stroke="#55603f" stroke-width="1.5"/>
+
+  <!-- furniture: sofa -->
+  <rect x="330" y="470" width="130" height="50" fill="none" stroke="#55603f" stroke-width="1.5"/>
+
+  <!-- furniture: kitchen counter -->
+  <path d="M60,260 L60,560 L160,560" fill="none" stroke="#55603f" stroke-width="1.5"/>
+
+  <!-- dimension lines -->
+  <line x1="40" y1="20" x2="480" y2="20" stroke="#9a927c" stroke-width="1"/>
+  <line x1="40" y1="14" x2="40" y2="26" stroke="#9a927c" stroke-width="1"/>
+  <line x1="480" y1="14" x2="480" y2="26" stroke="#9a927c" stroke-width="1"/>
+  <text x="240" y="14" font-family="Helvetica, Arial, sans-serif" font-size="12" fill="#9a927c" text-anchor="middle">8600</text>
+
+  <line x1="20" y1="40" x2="20" y2="580" stroke="#9a927c" stroke-width="1"/>
+  <line x1="14" y1="40" x2="26" y2="40" stroke="#9a927c" stroke-width="1"/>
+  <line x1="14" y1="580" x2="26" y2="580" stroke="#9a927c" stroke-width="1"/>
+</svg>
