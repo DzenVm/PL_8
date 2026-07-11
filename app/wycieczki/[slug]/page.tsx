@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { headers } from "next/headers";
 import { notFound } from "next/navigation";
 import { tours, getTourBySlug } from "@/lib/tours";
 
@@ -52,7 +53,10 @@ export default async function TourPage({
     notFound();
   }
 
+  const nonce = (await headers()).get("x-nonce") ?? undefined;
   const otherTours = tours.filter((item) => item.slug !== tour.slug);
+  const priceMatch = tour.price.match(/\d+/);
+  const siteUrl = "https://studiadesi.site";
 
   const tourJsonLd = {
     "@context": "https://schema.org",
@@ -69,13 +73,48 @@ export default async function TourPage({
         description: stop.description,
       })),
     },
+    offers: priceMatch
+      ? {
+          "@type": "Offer",
+          price: priceMatch[0],
+          priceCurrency: "PLN",
+          availability: "https://schema.org/InStock",
+          url: `${siteUrl}/wycieczki/${tour.slug}`,
+        }
+      : undefined,
+  };
+
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Strona główna", item: siteUrl },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Wycieczki",
+        item: `${siteUrl}/#wycieczki`,
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: tour.title,
+        item: `${siteUrl}/wycieczki/${tour.slug}`,
+      },
+    ],
   };
 
   return (
     <>
       <script
         type="application/ld+json"
+        nonce={nonce}
         dangerouslySetInnerHTML={{ __html: serializeJsonLd(tourJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        nonce={nonce}
+        dangerouslySetInnerHTML={{ __html: serializeJsonLd(breadcrumbJsonLd) }}
       />
       <div className="page-hero">
         <div className="container">

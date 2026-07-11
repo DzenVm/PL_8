@@ -3,7 +3,7 @@ export const contact = {
   phoneHref: "tel:+48226543210",
   mobileDisplay: "+48 508 216 374",
   mobileHref: "tel:+48508216374",
-  email: "kontakt@wycieczki-warszawa.example",
+  email: "kontakt@studiadesi.site",
   street: "ul. Marszałkowska 10 lok. 3",
   postalCode: "00-590",
   city: "Warszawa",

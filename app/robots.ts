@@ -6,6 +6,6 @@ export default function robots(): MetadataRoute.Robots {
       userAgent: "*",
       allow: "/",
     },
-    sitemap: "https://wycieczki-warszawa.example/sitemap.xml",
+    sitemap: "https://studiadesi.site/sitemap.xml",
   };
 }
