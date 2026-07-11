@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 700" role="img" aria-labelledby="panoramaTitle">
+  <title id="panoramaTitle">Ilustracja panoramy Warszawy z widoczną Wisłą, starówką i wieżowcami</title>
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#f3ede1"/>
+      <stop offset="100%" stop-color="#e9dcc3"/>
+    </linearGradient>
+    <linearGradient id="river" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#b9c9c6"/>
+      <stop offset="100%" stop-color="#9fb3af"/>
+    </linearGradient>
+  </defs>
+  <rect width="1600" height="700" fill="url(#sky)"/>
+
+  <!-- far skyline silhouette -->
+  <g fill="#c9b79a" opacity="0.6">
+    <rect x="60" y="330" width="40" height="220"/>
+    <rect x="120" y="300" width="30" height="250"/>
+    <rect x="900" y="280" width="46" height="270"/>
+    <rect x="970" y="320" width="34" height="230"/>
+    <rect x="1300" y="300" width="38" height="250"/>
+    <rect x="1360" y="340" width="28" height="210"/>
+  </g>
+
+  <!-- Palace of Culture style tower (generic, not a brand) -->
+  <g fill="#a68a63">
+    <rect x="1120" y="150" width="70" height="400"/>
+    <rect x="1140" y="90" width="30" height="70"/>
+    <rect x="1150" y="60" width="10" height="40"/>
+    <rect x="1095" y="230" width="120" height="20"/>
+  </g>
+
+  <!-- Old Town rooftops -->
+  <g fill="#b1543f">
+    <polygon points="240,420 300,360 360,420"/>
+    <polygon points="360,430 420,370 480,430"/>
+    <polygon points="480,425 535,365 590,425"/>
+    <polygon points="590,435 645,375 700,435"/>
+  </g>
+  <g fill="#8f6b4a">
+    <rect x="240" y="420" width="60" height="130"/>
+    <rect x="360" y="430" width="60" height="120"/>
+    <rect x="480" y="425" width="55" height="125"/>
+    <rect x="590" y="435" width="55" height="115"/>
+  </g>
+
+  <!-- castle-like tower -->
+  <g fill="#c26b4f">
+    <rect x="700" y="330" width="46" height="220"/>
+    <polygon points="700,330 723,280 746,330"/>
+    <rect x="716" y="300" width="14" height="30"/>
+  </g>
+
+  <!-- Vistula river -->
+  <path d="M0,560 C300,600 500,540 800,570 C1100,600 1300,560 1600,590 L1600,700 L0,700 Z" fill="url(#river)"/>
+
+  <!-- foreground trees -->
+  <g fill="#5f7a5a">
+    <ellipse cx="140" cy="600" rx="60" ry="40"/>
+    <ellipse cx="1480" cy="610" rx="70" ry="46"/>
+    <ellipse cx="1550" cy="590" rx="40" ry="30"/>
+  </g>
+</svg>
