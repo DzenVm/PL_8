@@ -10,39 +10,38 @@ export default function Footer() {
       <div className="container">
         <div className="footer-grid">
           <div>
-            <h4>Послуги</h4>
+            <h4>Usługi</h4>
             <ul>
               {services.map((service) => (
                 <li key={service.slug}>
-                  <Link href={`/poslugy/${service.slug}`}>{service.title}</Link>
+                  <Link href={`/uslugi/${service.slug}`}>{service.title}</Link>
                 </li>
               ))}
             </ul>
           </div>
           <div>
-            <h4>Інформація</h4>
+            <h4>Informacje</h4>
             <ul>
               <li>
-                <Link href="/pro-studiyu">Про студію</Link>
+                <Link href="/o-pracowni">O pracowni</Link>
               </li>
               <li>
-                <Link href="/kontakty">Контакти</Link>
+                <Link href="/kontakt">Kontakt</Link>
               </li>
               <li>
-                <Link href="/polityka-konfidentsiynosti">
-                  Політика конфіденційності
-                </Link>
+                <Link href="/polityka-prywatnosci">Polityka prywatności</Link>
               </li>
               <li>
-                <Link href="/polityka-cookies">Політика cookies</Link>
+                <Link href="/polityka-cookies">Polityka cookies</Link>
               </li>
             </ul>
           </div>
           <div>
-            <h4>Контакти</h4>
+            <h4>Kontakt</h4>
             <ul>
-              <li>{contact.legalName}</li>
-              <li>{contact.region}</li>
+              <li>
+                {contact.street}, {contact.postalCode} {contact.city}
+              </li>
               <li>
                 <a href={contact.phoneHref}>{contact.phoneDisplay}</a>
               </li>
@@ -54,10 +53,12 @@ export default function Footer() {
           </div>
         </div>
         <div className="footer-bottom">
-          <span>© {year} [НАЗВА СТУДІЇ]. Усі права захищені.</span>
+          <span>© {year} Pracownia projektowania wnętrz. Wszelkie prawa zastrzeżone.</span>
           <span className="footer-note">
-            Вартість послуг на сайті орієнтовна й уточнюється після заміру та
-            узгодження технічного завдання. {contact.legalName}, {contact.edrpou}.
+            Ceny na stronie mają charakter orientacyjny i są ustalane
+            ostatecznie po pomiarze oraz uzgodnieniu zakresu prac.
+            Jednoosobowa działalność gospodarcza, NIP {contact.nip}, REGON{" "}
+            {contact.regon}.
           </span>
         </div>
       </div>

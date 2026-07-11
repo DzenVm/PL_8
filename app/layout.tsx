@@ -6,42 +6,42 @@ import CookieConsent from "@/components/CookieConsent";
 import { contact } from "@/lib/contact";
 import "./globals.css";
 
-const siteUrl = "https://studio-interier.example";
+const siteUrl = "https://pracownia-wnetrz.example";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "Дизайн інтер'єру — 5 напрямків послуг | Консультація дизайнера",
-    template: "%s | Дизайн інтер'єру",
+    default: "Projektowanie wnętrz — 5 rodzajów usług | Konsultacja projektanta",
+    template: "%s | Projektowanie wnętrz",
   },
   description:
-    "Дизайн квартири, будинку, комерційного приміщення та окремих кімнат. Планування, 3D-візуалізація, робоча документація, авторський нагляд. Орієнтовні ціни на сайті.",
+    "Projekt mieszkania, domu, lokalu komercyjnego i pojedynczych pomieszczeń. Układ funkcjonalny, wizualizacje 3D, dokumentacja wykonawcza, nadzór autorski. Orientacyjne ceny na stronie.",
   keywords: [
-    "дизайн інтер'єру",
-    "дизайн квартири",
-    "дизайн будинку",
-    "3D-візуалізація інтер'єру",
-    "дизайнер інтер'єру Київ",
+    "projektowanie wnętrz",
+    "projekt mieszkania",
+    "projekt domu",
+    "wizualizacje 3D wnętrz",
+    "projektant wnętrz Warszawa",
   ],
   alternates: {
     canonical: "/",
   },
   openGraph: {
     type: "website",
-    locale: "uk_UA",
+    locale: "pl_PL",
     url: siteUrl,
-    siteName: "Дизайн інтер'єру",
-    title: "Дизайн інтер'єру — 5 напрямків послуг",
+    siteName: "Projektowanie wnętrz",
+    title: "Projektowanie wnętrz — 5 rodzajów usług",
     description:
-      "Планування, 3D-візуалізація, робоча документація та авторський нагляд. Орієнтовні ціни та терміни на сайті.",
-    images: ["/images/planuvannya-liniyy.svg"],
+      "Układ funkcjonalny, wizualizacje 3D, dokumentacja wykonawcza i nadzór autorski. Orientacyjne ceny i terminy na stronie.",
+    images: ["/images/plan-pomieszczenia.svg"],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Дизайн інтер'єру — 5 напрямків послуг",
+    title: "Projektowanie wnętrz — 5 rodzajów usług",
     description:
-      "Планування, 3D-візуалізація, робоча документація та авторський нагляд.",
-    images: ["/images/planuvannya-liniyy.svg"],
+      "Układ funkcjonalny, wizualizacje 3D, dokumentacja wykonawcza i nadzór autorski.",
+    images: ["/images/plan-pomieszczenia.svg"],
   },
   robots: {
     index: true,
@@ -52,23 +52,25 @@ export const metadata: Metadata = {
 const organizationJsonLd = {
   "@context": "https://schema.org",
   "@type": "ProfessionalService",
-  name: "[НАЗВА СТУДІЇ]",
-  legalName: contact.legalName,
+  name: "Pracownia projektowania wnętrz",
   description:
-    "Студія дизайну інтер'єру: дизайн квартир, будинків, комерційних приміщень, окремих кімнат та 3D-візуалізація.",
+    "Pracownia projektowania wnętrz: projekty mieszkań, domów, lokali komercyjnych, pojedynczych pomieszczeń oraz wizualizacje 3D.",
   url: siteUrl,
   address: {
     "@type": "PostalAddress",
+    streetAddress: contact.street,
+    postalCode: contact.postalCode,
     addressLocality: contact.city,
-    addressCountry: "UA",
+    addressCountry: "PL",
   },
   telephone: contact.phoneHref.replace("tel:", ""),
   email: contact.email,
+  taxID: contact.nip,
   areaServed: {
     "@type": "AdministrativeArea",
     name: contact.region,
   },
-  priceRange: "від 750 грн/м²",
+  priceRange: "od 180 zł/m²",
 };
 
 function serializeJsonLd(data: unknown) {
@@ -86,7 +88,7 @@ export default async function RootLayout({
   const nonce = (await headers()).get("x-nonce") ?? undefined;
 
   return (
-    <html lang="uk">
+    <html lang="pl">
       <body>
         <script
           type="application/ld+json"

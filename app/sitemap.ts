@@ -1,14 +1,14 @@
 import type { MetadataRoute } from "next";
 import { services } from "@/lib/services";
 
-const siteUrl = "https://studio-interier.example";
+const siteUrl = "https://pracownia-wnetrz.example";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const staticRoutes = [
     "",
-    "/pro-studiyu",
-    "/kontakty",
-    "/polityka-konfidentsiynosti",
+    "/o-pracowni",
+    "/kontakt",
+    "/polityka-prywatnosci",
     "/polityka-cookies",
   ].map((path) => ({
     url: `${siteUrl}${path}`,
@@ -16,7 +16,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   }));
 
   const serviceRoutes = services.map((service) => ({
-    url: `${siteUrl}/poslugy/${service.slug}`,
+    url: `${siteUrl}/uslugi/${service.slug}`,
     lastModified: new Date(),
   }));
 

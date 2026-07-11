@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 24" role="img" aria-labelledby="rulerTitle">
-  <title id="rulerTitle">Декоративна вимірювальна лінія</title>
+  <title id="rulerTitle">Ozdobna linia wymiarowa</title>
   <line x1="4" y1="12" x2="236" y2="12" stroke="#55603f" stroke-width="1.5"/>
   <line x1="4" y1="4" x2="4" y2="20" stroke="#55603f" stroke-width="1.5"/>
   <line x1="236" y1="4" x2="236" y2="20" stroke="#55603f" stroke-width="1.5"/>

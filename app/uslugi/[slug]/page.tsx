@@ -4,7 +4,7 @@ import { headers } from "next/headers";
 import { notFound } from "next/navigation";
 import { services, stages, getServiceBySlug } from "@/lib/services";
 
-const siteUrl = "https://studio-interier.example";
+const siteUrl = "https://pracownia-wnetrz.example";
 
 export function generateStaticParams() {
   return services.map((service) => ({ slug: service.slug }));
@@ -26,12 +26,12 @@ export async function generateMetadata({
     title: service.title,
     description: service.metaDescription,
     alternates: {
-      canonical: `/poslugy/${service.slug}`,
+      canonical: `/uslugi/${service.slug}`,
     },
     openGraph: {
       title: service.title,
       description: service.metaDescription,
-      url: `/poslugy/${service.slug}`,
+      url: `/uslugi/${service.slug}`,
     },
   };
 }
@@ -66,14 +66,14 @@ export default async function ServicePage({
     description: service.metaDescription,
     provider: {
       "@type": "ProfessionalService",
-      name: "[НАЗВА СТУДІЇ]",
+      name: "Pracownia projektowania wnętrz",
     },
     offers: {
       "@type": "Offer",
       priceSpecification: {
         "@type": "PriceSpecification",
         price: service.priceFrom,
-        priceCurrency: "UAH",
+        priceCurrency: "PLN",
       },
     },
   };
@@ -82,18 +82,18 @@ export default async function ServicePage({
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
-      { "@type": "ListItem", position: 1, name: "Головна", item: siteUrl },
+      { "@type": "ListItem", position: 1, name: "Strona główna", item: siteUrl },
       {
         "@type": "ListItem",
         position: 2,
-        name: "Послуги",
-        item: `${siteUrl}/#poslugy`,
+        name: "Usługi",
+        item: `${siteUrl}/#uslugi`,
       },
       {
         "@type": "ListItem",
         position: 3,
         name: service.title,
-        item: `${siteUrl}/poslugy/${service.slug}`,
+        item: `${siteUrl}/uslugi/${service.slug}`,
       },
     ],
   };
@@ -113,7 +113,7 @@ export default async function ServicePage({
       <div className="page-hero">
         <div className="container">
           <p className="breadcrumbs">
-            <Link href="/">Головна</Link> / <Link href="/#poslugy">Послуги</Link> /{" "}
+            <Link href="/">Strona główna</Link> / <Link href="/#uslugi">Usługi</Link> /{" "}
             {service.title}
           </p>
           <h1>{service.title}</h1>
@@ -124,7 +124,7 @@ export default async function ServicePage({
       <div className="section">
         <div className="container detail-grid">
           <div>
-            <h2>Етапи роботи</h2>
+            <h2>Etapy pracy</h2>
             <div>
               {stages.map((stage, index) => (
                 <div className="stage-item" key={stage.title}>
@@ -141,21 +141,21 @@ export default async function ServicePage({
               ))}
             </div>
 
-            <h2>Що входить у послугу</h2>
+            <h2>Co obejmuje usługa</h2>
             <ul className="tag-list">
               {service.includes.map((item) => (
                 <li key={item}>{item}</li>
               ))}
             </ul>
 
-            <h2>Що не входить</h2>
+            <h2>Czego nie obejmuje</h2>
             <ul className="tag-list">
               {service.notIncluded.map((item) => (
                 <li key={item}>{item}</li>
               ))}
             </ul>
 
-            <h2>Важливо знати</h2>
+            <h2>Warto wiedzieć</h2>
             <ul className="tag-list">
               {service.goodToKnow.map((item) => (
                 <li key={item}>{item}</li>
@@ -164,22 +164,22 @@ export default async function ServicePage({
           </div>
 
           <aside className="info-card">
-            <span className="eyebrow">Орієнтовні умови</span>
+            <span className="eyebrow">Orientacyjne warunki</span>
             <dl>
-              <dt>Вартість</dt>
+              <dt>Cena</dt>
               <dd>{service.priceFrom}</dd>
-              <dt>Термін</dt>
+              <dt>Termin</dt>
               <dd>{service.duration}</dd>
             </dl>
             <p style={{ fontSize: "0.85rem", marginTop: "16px" }}>
               {service.priceNote}
             </p>
             <Link
-              href="/kontakty"
+              href="/kontakt"
               className="btn btn--primary"
               style={{ width: "100%", marginTop: "8px" }}
             >
-              Обговорити проєкт
+              Omów projekt
             </Link>
           </aside>
         </div>
@@ -188,14 +188,14 @@ export default async function ServicePage({
       <section className="section section--alt">
         <div className="container">
           <div className="section-heading">
-            <span className="eyebrow">Інші напрямки</span>
-            <h2>Ще послуги студії</h2>
+            <span className="eyebrow">Inne usługi</span>
+            <h2>Pozostałe usługi pracowni</h2>
           </div>
           <div className="other-services">
             {otherServices.map((item) => (
               <Link
                 key={item.slug}
-                href={`/poslugy/${item.slug}`}
+                href={`/uslugi/${item.slug}`}
                 className="other-service-card"
               >
                 <h3>{item.title}</h3>

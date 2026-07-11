@@ -2,20 +2,18 @@ import Link from "next/link";
 import { contact } from "@/lib/contact";
 
 const navLinks = [
-  { href: "/#poslugy", label: "Послуги" },
-  { href: "/pro-studiyu", label: "Про студію" },
-  { href: "/#protses", label: "Процес" },
-  { href: "/kontakty", label: "Контакти" },
+  { href: "/#uslugi", label: "Usługi" },
+  { href: "/o-pracowni", label: "O pracowni" },
+  { href: "/#proces", label: "Proces" },
+  { href: "/kontakt", label: "Kontakt" },
 ];
 
 export default function Header() {
   return (
     <header className="site-header">
       <div className="container site-header__inner">
-        <Link href="/" aria-label="На головну" className="brand-slot">
-          [НАЗВА СТУДІЇ]
-        </Link>
-        <nav aria-label="Головна навігація">
+        <Link href="/" aria-label="Strona główna" className="brand-slot" />
+        <nav aria-label="Nawigacja główna">
           <ul className="site-nav">
             {navLinks.map((link) => (
               <li key={link.href}>

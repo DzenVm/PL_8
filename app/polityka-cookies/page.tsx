@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Політика cookies",
+  title: "Polityka cookies",
   description:
-    "Інформація про файли cookie та локальне сховище браузера, що використовуються на сайті.",
+    "Informacje o plikach cookie oraz lokalnym zapisie przeglądarki wykorzystywanym na stronie.",
   alternates: { canonical: "/polityka-cookies" },
 };
 
@@ -14,55 +14,55 @@ export default function CookiePolicyPage() {
       <div className="page-hero">
         <div className="container">
           <p className="breadcrumbs">
-            <Link href="/">Головна</Link> / Політика cookies
+            <Link href="/">Strona główna</Link> / Polityka cookies
           </p>
-          <h1>Політика cookies</h1>
+          <h1>Polityka cookies</h1>
         </div>
       </div>
 
       <div className="section">
         <div className="container prose" style={{ maxWidth: "760px" }}>
-          <h2>Що таке файли cookie</h2>
+          <h2>Czym są pliki cookie</h2>
           <p>
-            Файли cookie — невеликі текстові файли, що зберігаються у
-            браузері пристрою. У випадку цього сайту йдеться також про запис
-            у локальній пам&apos;яті браузера (localStorage), який виконує
-            подібну функцію.
+            Pliki cookie to małe pliki tekstowe zapisywane w przeglądarce
+            urządzenia użytkownika. W przypadku tej strony pojęcie to
+            obejmuje również zapis w pamięci lokalnej przeglądarki
+            (localStorage), który pełni podobną funkcję.
           </p>
 
-          <h2>Які категорії використовуються</h2>
+          <h2>Jakich kategorii używamy</h2>
 
-          <h3>Необхідні (завжди активні)</h3>
+          <h3>Niezbędne (zawsze aktywne)</h3>
           <p>
-            Один запис у localStorage, що зберігає інформацію про те, чи
-            прийняли або відхилили ви банер cookies. Без цього запису банер
-            з&apos;являвся б при кожному візиті. Цей запис не передається
-            жодній третій стороні.
+            Pojedynczy wpis w localStorage przechowujący informację, czy
+            zaakceptowałeś(-aś) lub odrzuciłeś(-aś) baner cookies. Bez tego
+            wpisu baner wyświetlałby się przy każdej wizycie. Ten zapis nie
+            jest przekazywany żadnemu podmiotowi zewnętrznemu.
           </p>
 
-          <h3>Функціональні (опційні)</h3>
+          <h3>Funkcjonalne (opcjonalne)</h3>
           <p>
-            Зарезервована категорія для налаштувань, що покращують зручність
-            користування сайтом (напр. запам&apos;ятовування розгорнутих
-            розділів FAQ). Можна ввімкнути або вимкнути в налаштуваннях
-            банера cookies — вимкнення не обмежує доступ до контенту сайту.
+            Zarezerwowana kategoria dla ustawień poprawiających wygodę
+            korzystania ze strony (np. zapamiętanie rozwiniętych sekcji
+            FAQ). Można je włączyć lub wyłączyć w ustawieniach banera
+            cookies — wyłączenie nie ogranicza dostępu do treści strony.
           </p>
 
-          <h3>Аналітичні та рекламні</h3>
+          <h3>Analityczne i marketingowe</h3>
           <p>
-            <strong>Не використовуються.</strong> Сайт не містить скриптів
-            Google Analytics, Google Ads, Meta Pixel чи будь-яких інших
-            аналітичних або рекламних інструментів третіх сторін.
+            <strong>Nie są wykorzystywane.</strong> Strona nie zawiera
+            skryptów Google Analytics, Google Ads, Meta Pixel ani żadnych
+            innych narzędzi analitycznych lub reklamowych firm trzecich.
           </p>
 
-          <h2>Керування згодою</h2>
+          <h2>Zarządzanie zgodą</h2>
           <p>
-            Свій вибір можна змінити будь-коли, очистивши дані сайту
-            (localStorage) у налаштуваннях браузера — банер cookies
-            з&apos;явиться знову при наступному візиті.
+            Swój wybór możesz w każdej chwili zmienić, czyszcząc dane strony
+            (localStorage) w ustawieniach swojej przeglądarki — baner
+            cookies pojawi się ponownie przy kolejnej wizycie.
           </p>
 
-          <p style={{ fontSize: "0.85rem" }}>Останнє оновлення: липень 2026.</p>
+          <p style={{ fontSize: "0.85rem" }}>Ostatnia aktualizacja: lipiec 2026.</p>
         </div>
       </div>
     </>

@@ -1,41 +1,41 @@
-# Дизайн інтер'єру — сайт студії
+# Projektowanie wnętrz — strona pracowni
 
-SSR-сайт (Next.js App Router) студії дизайну інтер'єру з п'ятьма напрямками послуг. Українською мовою, без залежності від CDN — усі ресурси (стилі, іконки, SVG-зображення) обслуговуються локально.
+Strona SSR (Next.js App Router) pracowni projektowania wnętrz z pięcioma rodzajami usług. Po polsku, bez zależności od CDN — wszystkie zasoby (style, ikony, obrazy SVG) są serwowane lokalnie.
 
-## Локальний запуск
+## Uruchomienie lokalne
 
 ```bash
 npm install
 npm run dev
 ```
 
-Застосунок за замовчуванням доступний на [http://localhost:3000](http://localhost:3000).
+Aplikacja domyślnie działa pod adresem [http://localhost:3000](http://localhost:3000).
 
-## Продакшн-білд
+## Build produkcyjny
 
 ```bash
 npm run build
 npm run start
 ```
 
-## Структура
+## Struktura
 
-- `app/page.tsx` — головна сторінка (landing під кампанії Google Ads)
-- `app/poslugy/[slug]` — підсторінки п'яти напрямків послуг (SSR + `generateStaticParams`)
-- `app/pro-studiyu`, `app/kontakty`, `app/polityka-konfidentsiynosti`, `app/polityka-cookies` — інформаційні сторінки
-- `app/icon.svg`, `app/apple-icon.svg` — фавікон (Next.js file-convention)
-- `components/CookieConsent.tsx` — банер згоди на cookies (кнопки: прийняти / відхилити / налаштування)
-- `lib/services.ts` — дані п'яти напрямків послуг та етапів роботи
-- `lib/contact.ts` — єдине джерело контактних даних (телефон, e-mail, регіон, юр. форма)
-- `proxy.ts` — генерує nonce і заголовок CSP на кожен запит (Next.js 16 "proxy", раніше middleware)
-- `next.config.ts` — інші заголовки безпеки (HSTS, X-Frame-Options та інші)
+- `app/page.tsx` — strona główna (landing pod kampanie Google Ads)
+- `app/uslugi/[slug]` — podstrony pięciu usług (SSR + `generateStaticParams`)
+- `app/o-pracowni`, `app/kontakt`, `app/polityka-prywatnosci`, `app/polityka-cookies` — strony informacyjne
+- `app/icon.svg`, `app/apple-icon.svg` — favicon (Next.js file-convention)
+- `components/CookieConsent.tsx` — baner zgody na cookies (przyciski: akceptuj / odrzuć / ustawienia)
+- `lib/services.ts` — dane pięciu usług oraz etapów pracy
+- `lib/contact.ts` — jedno źródło danych kontaktowych (telefon, e-mail, region, dane firmy)
+- `proxy.ts` — generuje nonce i nagłówek CSP na każde żądanie (Next.js 16 "proxy", dawniej middleware)
+- `next.config.ts` — pozostałe nagłówki bezpieczeństwa (HSTS, X-Frame-Options i inne)
 
-## Примітки
+## Uwagi
 
-- Домен-плейсхолдер: `studio-interier.example` (вказано в `app/layout.tsx`, `app/sitemap.ts`, `app/robots.ts`) — замінити на реальний домен перед деплоєм.
-- Назви студії та лого навмисно немає — у шапці текстовий плейсхолдер `[НАЗВА СТУДІЇ]`, юридична назва (ФОП-плейсхолдер) — у футері та реквізитах.
-- Жодних назв брендів меблів/сантехніки/матеріалів у контенті — тільки типи матеріалів і стилі.
-- Немає Google Analytics, рекламних пікселів чи скриптів третіх сторін — відповідно до опису в політиці cookies.
-- Ціни на кожному напрямку — орієнтовні вилки з приміткою, що фінальна вартість визначається після заміру.
-- CSP використовує nonce, згенерований у `proxy.ts` (без `unsafe-inline` для скриптів), тому сторінки рендеряться динамічно (SSR) замість повністю статичних.
-- Готовий до деплою на Vercel без додаткової конфігурації.
+- Domena-placeholder: `pracownia-wnetrz.example` (ustawiona w `app/layout.tsx`, `app/sitemap.ts`, `app/robots.ts`) — zamienić na docelową domenę przed wdrożeniem.
+- Brak nazwy pracowni i logo celowo — miejsce w nagłówku pozostaje puste, bez tekstowego placeholdera; w stopce i danych firmy widnieje wyłącznie opisowa fraza „Pracownia projektowania wnętrz" oraz realistyczne dane (NIP, REGON, adres, telefon).
+- Żadnych nazw marek mebli/armatury/materiałów w treści — tylko typy materiałów i style.
+- Brak Google Analytics, pikseli reklamowych i skryptów firm trzecich — zgodnie z opisem w polityce cookies.
+- Ceny przy każdej usłudze — orientacyjne widełki z zastrzeżeniem, że ostateczna wycena ustalana jest po pomiarze.
+- CSP wykorzystuje nonce generowany w `proxy.ts` (bez `unsafe-inline` dla skryptów), dlatego strony renderowane są dynamicznie (SSR) zamiast w pełni statycznie.
+- Gotowa do wdrożenia na Vercel bez dodatkowej konfiguracji.

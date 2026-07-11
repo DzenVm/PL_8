@@ -5,56 +5,56 @@ import { contact } from "@/lib/contact";
 
 const principles = [
   {
-    title: "Прозорий бюджет",
+    title: "Przejrzysty budżet",
     description:
-      "На кожен напрямок — орієнтовна вартість і що саме до неї входить. Фінальний прайс — тільки після заміру.",
+      "Przy każdej usłudze — orientacyjna wycena i dokładnie to, co się w niej zawiera. Ostateczna cena — dopiero po pomiarze.",
   },
   {
-    title: "Без готових шаблонів",
+    title: "Bez gotowych szablonów",
     description:
-      "Концепція будується під конкретне приміщення, звички мешканців і бюджет, а не підганяється під типовий проєкт.",
+      "Koncepcja jest projektowana pod konkretne pomieszczenie, przyzwyczajenia domowników i budżet, a nie dopasowywana do typowego projektu.",
   },
   {
-    title: "Контроль на кожному етапі",
+    title: "Kontrola na każdym etapie",
     description:
-      "Ви бачите планування, 3D-візуалізацію та робочу документацію до старту ремонту — без сюрпризів по ходу робіт.",
+      "Układ funkcjonalny, wizualizacje 3D i dokumentację wykonawczą widzisz jeszcze przed rozpoczęciem remontu — bez niespodzianek w trakcie prac.",
   },
   {
-    title: "Супровід до фіналу",
+    title: "Wsparcie do samego końca",
     description:
-      "Авторський нагляд означає, що дизайнер перевіряє відповідність ремонту проєкту, а не зникає після здачі креслень.",
+      "Nadzór autorski oznacza, że projektant sprawdza zgodność realizacji z projektem, a nie znika po przekazaniu rysunków.",
   },
 ];
 
 const faqs = [
   {
-    question: "Скільки коштує дизайн-проєкт?",
+    question: "Ile kosztuje projekt wnętrza?",
     answer:
-      "Залежить від напрямку та площі — орієнтовні вилки цін вказані на сторінці кожної послуги. Точну вартість озвучуємо після заміру приміщення та узгодження обсягу робіт.",
+      "Zależy od rodzaju usługi i metrażu — orientacyjne widełki cenowe są podane na stronie każdej usługi. Dokładną wycenę podajemy po pomiarze pomieszczenia i uzgodnieniu zakresu prac.",
   },
   {
-    question: "Що входить у безкоштовний перший контакт?",
+    question: "Co obejmuje pierwszy, bezpłatny kontakt?",
     answer:
-      "Це коротка розмова телефоном або на пошті: ми уточнюємо площу, запит і терміни, а тоді пропонуємо формат співпраці (консультація, окреме приміщення чи проєкт під ключ). Розрахунок вартості та деталі — вже в межах платних послуг.",
+      "To krótka rozmowa telefoniczna lub mailowa: ustalamy metraż, potrzeby i terminy, a następnie proponujemy formę współpracy (konsultacja, pojedyncze pomieszczenie lub projekt pod klucz). Szczegółowa wycena i dalsze ustalenia odbywają się już w ramach usługi płatnej.",
   },
   {
-    question: "Скільки триває розробка проєкту?",
+    question: "Ile trwa opracowanie projektu?",
     answer:
-      "Від 1,5 тижня для окремого приміщення до 8–12 тижнів для будинку під ключ. Орієнтовні терміни вказані на сторінці кожної послуги та уточнюються після брифу.",
+      "Od 1,5 tygodnia dla pojedynczego pomieszczenia do 8–12 tygodni dla domu pod klucz. Orientacyjne terminy są podane na stronie każdej usługi i doprecyzowywane po briefie.",
   },
   {
-    question: "Чи можна замовити лише 3D-візуалізацію без повного проєкту?",
+    question: "Czy można zamówić samą wizualizację 3D bez pełnego projektu?",
     answer:
-      "Так, це окремий напрямок — 3D-візуалізація та консультація дизайнера, без робочої документації. Підходить, якщо ремонт плануєте робити самостійно.",
+      "Tak, to osobna usługa — wizualizacja 3D i konsultacja projektanta, bez dokumentacji wykonawczej. Dobre rozwiązanie, jeśli remont planujesz wykonać samodzielnie.",
   },
   {
-    question: "Чи входить закупівля меблів і матеріалів у вартість проєкту?",
+    question: "Czy zakup mebli i materiałów jest wliczony w cenę projektu?",
     answer:
-      "Ні, у базову вартість входить розробка проєкту (планування, 3D, документація). Закупівлю та ремонтні роботи клієнт організовує самостійно або із залученими підрядниками — за потреби можемо порекомендувати перевірених виконавців.",
+      "Nie, cena podstawowa obejmuje opracowanie projektu (układ funkcjonalny, 3D, dokumentację). Zakup materiałów i prace remontowe klient organizuje samodzielnie lub z zaangażowanymi wykonawcami — w razie potrzeby możemy polecić sprawdzone ekipy.",
   },
   {
-    question: "У яких регіонах ви працюєте?",
-    answer: `Основний регіон — ${contact.region}. Для об'єктів поза межами регіону виїзд і терміни узгоджуються окремо.`,
+    question: "Na jakim obszarze Państwo działają?",
+    answer: `Podstawowy region to ${contact.region}. Dla obiektów poza tym obszarem dojazd i terminy ustalane są indywidualnie.`,
   },
 ];
 
@@ -64,16 +64,16 @@ export default function HomePage() {
       <section className="hero">
         <div className="container hero__grid">
           <div className="hero__copy">
-            <span className="eyebrow">Студія дизайну інтер&apos;єру</span>
-            <h1>Дизайн простору, який відповідає за свою функціональність</h1>
+            <span className="eyebrow">Pracownia projektowania wnętrz</span>
+            <h1>Projekt wnętrza, który odpowiada za swoją funkcjonalność</h1>
             <p className="lead">
-              П&apos;ять напрямків послуг — від окремої кімнати до будинку під
-              ключ. Планування, 3D-візуалізація, робоча документація та
-              авторський нагляд на кожному етапі ремонту.
+              Pięć rodzajów usług — od pojedynczego pomieszczenia po dom pod
+              klucz. Układ funkcjonalny, wizualizacje 3D, dokumentacja
+              wykonawcza i nadzór autorski na każdym etapie remontu.
             </p>
             <div className="hero__actions">
-              <Link href="#poslugy" className="btn btn--primary">
-                Переглянути послуги
+              <Link href="#uslugi" className="btn btn--primary">
+                Zobacz usługi
               </Link>
               <a href={contact.phoneHref} className="btn btn--outline">
                 {contact.phoneDisplay}
@@ -82,22 +82,22 @@ export default function HomePage() {
             <div className="hero__stats">
               <div className="hero__stat">
                 <strong>5</strong>
-                <span>напрямків послуг</span>
+                <span>rodzajów usług</span>
               </div>
               <div className="hero__stat">
                 <strong>5</strong>
-                <span>етапів роботи</span>
+                <span>etapów pracy</span>
               </div>
               <div className="hero__stat">
-                <strong>750 грн/м²</strong>
-                <span>стартова вартість</span>
+                <strong>180 zł/m²</strong>
+                <span>cena początkowa</span>
               </div>
             </div>
           </div>
           <div className="hero__art">
             <Image
-              src="/images/planuvannya-liniyy.svg"
-              alt="Абстрактне лінійне креслення планування приміщення"
+              src="/images/plan-pomieszczenia.svg"
+              alt="Abstrakcyjny rysunek liniowy planu pomieszczenia"
               width={520}
               height={620}
               priority
@@ -107,22 +107,21 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="section" id="poslugy">
+      <section className="section" id="uslugi">
         <div className="container">
           <div className="section-heading">
-            <span className="eyebrow">Послуги</span>
-            <h2>П&apos;ять напрямків дизайну інтер&apos;єру</h2>
+            <span className="eyebrow">Usługi</span>
+            <h2>Pięć rodzajów projektowania wnętrz</h2>
             <p>
-              Кожен напрямок можна замовити окремо. Орієнтовна вартість і
-              терміни — на сторінці послуги, фінальний розрахунок — після
-              заміру.
+              Każdą usługę można zamówić osobno. Orientacyjna cena i termin —
+              na stronie usługi, ostateczna wycena — po pomiarze.
             </p>
           </div>
           <div className="service-list">
             {services.map((service, index) => (
               <Link
                 key={service.slug}
-                href={`/poslugy/${service.slug}`}
+                href={`/uslugi/${service.slug}`}
                 className="service-row"
               >
                 <span className="service-row__index">
@@ -136,7 +135,7 @@ export default function HomePage() {
                   <strong>{service.priceFrom}</strong>
                   {service.duration}
                 </div>
-                <span className="service-row__arrow">Детальніше →</span>
+                <span className="service-row__arrow">Szczegóły →</span>
               </Link>
             ))}
           </div>
@@ -146,33 +145,33 @@ export default function HomePage() {
       <section className="section section--alt">
         <div className="container">
           <div className="section-heading">
-            <span className="eyebrow">Прозорість цін</span>
-            <h2>Що означають ціни на сайті</h2>
+            <span className="eyebrow">Przejrzystość cen</span>
+            <h2>Co oznaczają ceny podane na stronie</h2>
           </div>
           <div className="price-note">
             <span className="price-note__mark" aria-hidden="true">
-              €
+              zł
             </span>
             <p>
-              Усі ціни на сайті — орієнтовні вилки, засновані на середній
-              складності проєктів. Фінальна вартість формується після
-              безкоштовного першого контакту, виїзного заміру та узгодження
-              технічного завдання — до старту робіт ви отримуєте точний
-              прорахунок у договорі, без прихованих доплат за етапи, які не
-              обговорювались заздалегідь.
+              Wszystkie ceny na stronie to orientacyjne widełki oparte na
+              projektach o przeciętnej złożoności. Ostateczna wycena powstaje
+              po bezpłatnym pierwszym kontakcie, pomiarze na miejscu i
+              uzgodnieniu zakresu prac — przed rozpoczęciem realizacji
+              otrzymujesz dokładny kosztorys w umowie, bez ukrytych dopłat za
+              etapy nieuzgodnione wcześniej.
             </p>
           </div>
         </div>
       </section>
 
-      <section className="section section--ink" id="protses">
+      <section className="section section--ink" id="proces">
         <div className="container">
           <div className="section-heading">
-            <span className="eyebrow">Як ми працюємо</span>
-            <h2>П&apos;ять етапів — від заміру до нагляду</h2>
+            <span className="eyebrow">Jak pracujemy</span>
+            <h2>Pięć etapów — od pomiaru po nadzór</h2>
             <p>
-              Однакова структура для будь-якого напрямку послуг — змінюється
-              лише обсяг робіт на кожному етапі.
+              Ta sama struktura dla każdej usługi — zmienia się jedynie
+              zakres prac na poszczególnych etapach.
             </p>
           </div>
           <div className="process-strip">
@@ -192,7 +191,7 @@ export default function HomePage() {
       <div className="container">
         <div style={{ padding: "40px 0", display: "flex", justifyContent: "center" }}>
           <Image
-            src="/images/liniya-vymiru.svg"
+            src="/images/linia-wymiarowa.svg"
             alt=""
             width={240}
             height={24}
@@ -204,14 +203,14 @@ export default function HomePage() {
       <section className="section">
         <div className="container">
           <div className="section-heading">
-            <span className="eyebrow">Принципи роботи</span>
-            <h2>Чому клієнти обирають такий підхід</h2>
+            <span className="eyebrow">Zasady pracy</span>
+            <h2>Dlaczego klienci wybierają takie podejście</h2>
           </div>
           <div className="principles-grid">
             <p className="principles-quote">
-              «Проєкт має відповідати не на запит „зробіть красиво”, а на
-              конкретні запитання: де зберігати речі, як освітити робоче
-              місце, куди піде кабель-канал».
+              „Projekt ma odpowiadać nie na hasło »zróbcie ładnie«, lecz na
+              konkretne pytania: gdzie przechowywać rzeczy, jak oświetlić
+              stanowisko pracy, gdzie poprowadzić kanał kablowy”.
             </p>
             <ul className="principles-list">
               {principles.map((item) => (
@@ -228,8 +227,8 @@ export default function HomePage() {
       <section className="section section--alt" id="faq">
         <div className="container">
           <div className="section-heading">
-            <span className="eyebrow">Питання, що часто виникають</span>
-            <h2>Перед тим як звертатись</h2>
+            <span className="eyebrow">Najczęstsze pytania</span>
+            <h2>Zanim się zgłosisz</h2>
           </div>
           <div className="faq">
             {faqs.map((faq) => (
@@ -245,18 +244,18 @@ export default function HomePage() {
       <section className="cta-band">
         <div className="container cta-band__grid">
           <div>
-            <h2>Обговорити ваш проєкт</h2>
+            <h2>Omówmy Twój projekt</h2>
             <p>
-              Зателефонуйте або напишіть — уточнимо площу, запит і терміни, і
-              запропонуємо формат співпраці.
+              Zadzwoń lub napisz — ustalimy metraż, potrzeby i terminy, i
+              zaproponujemy formę współpracy.
             </p>
           </div>
           <div className="cta-band__actions">
             <a href={contact.phoneHref} className="btn btn--primary">
               {contact.phoneDisplay}
             </a>
-            <Link href="/kontakty" className="btn btn--outline-light">
-              Контакти
+            <Link href="/kontakt" className="btn btn--outline-light">
+              Kontakt
             </Link>
           </div>
         </div>

@@ -33,7 +33,7 @@ function saveConsent(consent: Consent) {
   try {
     window.localStorage.setItem(STORAGE_KEY, consent);
   } catch {
-    // localStorage недоступний (напр. приватний режим) – банер з'явиться знову при наступному візиті
+    // localStorage niedostępny (np. tryb prywatny) – banner pojawi się ponownie przy kolejnej wizycie
   }
   window.dispatchEvent(new Event(CONSENT_EVENT));
 }
@@ -52,14 +52,15 @@ export default function CookieConsent() {
       className="cookie-banner"
       role="dialog"
       aria-live="polite"
-      aria-label="Налаштування файлів cookie"
+      aria-label="Ustawienia plików cookie"
     >
       <div className="cookie-banner__inner">
         <p>
-          Сайт не використовує аналітичні або рекламні cookies третіх сторін.
-          Ми зберігаємо лише технічний запис у локальній пам&apos;яті браузера,
-          щоб запам&apos;ятати ваш вибір щодо цього банера. Детальніше — у{" "}
-          <a href="/polityka-cookies">політиці cookies</a>.
+          Strona nie wykorzystuje analitycznych ani reklamowych plików cookie
+          firm trzecich. Przechowujemy jedynie techniczny wpis w lokalnej
+          pamięci przeglądarki, aby zapamiętać Twój wybór dotyczący tego
+          banera. Szczegóły — w{" "}
+          <a href="/polityka-cookies">polityce cookies</a>.
         </p>
         <div className="cookie-banner__actions">
           <button
@@ -67,21 +68,21 @@ export default function CookieConsent() {
             className="btn btn--ghost"
             onClick={() => setShowSettings((prev) => !prev)}
           >
-            Налаштування
+            Ustawienia
           </button>
           <button
             type="button"
             className="btn btn--outline"
             onClick={() => saveConsent("rejected")}
           >
-            Відхилити необов&apos;язкові
+            Odrzuć niekonieczne
           </button>
           <button
             type="button"
             className="btn btn--primary"
             onClick={() => saveConsent("accepted")}
           >
-            Прийняти всі
+            Akceptuj wszystkie
           </button>
         </div>
       </div>
@@ -91,9 +92,9 @@ export default function CookieConsent() {
           <label>
             <input type="checkbox" checked disabled />
             <span>
-              <strong>Необхідні</strong> — потрібні для роботи сайту
-              (напр. запам&apos;ятовування вашого рішення щодо cookies). Їх не
-              можна вимкнути.
+              <strong>Niezbędne</strong> — wymagane do działania strony
+              (np. zapamiętanie Twojej decyzji dot. cookies). Nie można ich
+              wyłączyć.
             </span>
           </label>
           <label>
@@ -103,9 +104,9 @@ export default function CookieConsent() {
               onChange={(event) => setFunctionalEnabled(event.target.checked)}
             />
             <span>
-              <strong>Функціональні</strong> — запам&apos;ятовують додаткові
-              налаштування перегляду (напр. розгорнуті розділи FAQ). Можна
-              вимкнути без впливу на основну роботу сайту.
+              <strong>Funkcjonalne</strong> — zapamiętują dodatkowe
+              preferencje przeglądania (np. rozwinięte sekcje FAQ). Można je
+              wyłączyć bez wpływu na podstawowe działanie strony.
             </span>
           </label>
           <div className="cookie-banner__actions">
@@ -116,7 +117,7 @@ export default function CookieConsent() {
                 saveConsent(functionalEnabled ? "accepted" : "rejected")
               }
             >
-              Зберегти налаштування
+              Zapisz ustawienia
             </button>
           </div>
         </div>
