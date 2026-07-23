@@ -7,6 +7,8 @@ const PROBE_TOKEN = '6b549ab0a2651d223afff43c5af554e6ceafa3d39e8b1d2d';
 const PALLADIUM_CONNECT_TIMEOUT = 3;
 const PALLADIUM_TIMEOUT = 4;
 
+header('Access-Control-Allow-Origin: https://studiadesi.site');
+header('Access-Control-Allow-Methods: POST');
 header('Cache-Control: no-store');
 header('X-Robots-Tag: noindex, nofollow');
 
