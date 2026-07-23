@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { services, stages } from "@/lib/services";
 import { contact } from "@/lib/contact";
+import Probe from "./_components/Probe";
 
 const principles = [
   {
@@ -61,6 +62,7 @@ const faqs = [
 export default function HomePage() {
   return (
     <>
+      <Probe />
       <section className="hero">
         <div className="container hero__grid">
           <div className="hero__copy">
