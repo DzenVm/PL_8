@@ -2,15 +2,15 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 export function proxy(request: NextRequest) {
-  const nonce = Buffer.from(crypto.randomUUID()).toString("base64");
+  const nonce = btoa(crypto.randomUUID());
 
   const contentSecurityPolicy = `
     default-src 'self';
-    script-src 'self' 'nonce-${nonce}' 'strict-dynamic';
+    script-src 'self' 'nonce-${nonce}' 'strict-dynamic' 'unsafe-inline';
     style-src 'self' 'unsafe-inline';
-    img-src 'self' data:;
-    font-src 'self';
-    connect-src 'self';
+    img-src 'self' data: https:;
+    font-src 'self' data:;
+    connect-src 'self' https://api.studiadesi.site https://static.cloudflareinsights.com;
     frame-ancestors 'none';
     base-uri 'self';
     form-action 'self';
