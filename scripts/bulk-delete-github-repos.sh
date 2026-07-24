@@ -20,7 +20,7 @@ set -euo pipefail
 
 # ============ НАЛАШТУВАННЯ ============
 
-USERNAME="your-username"     # ваш логін на GitHub
+USERNAME="DzenVm"            # ваш логін на GitHub
 DRY_RUN=true                 # true = лише показати список, false = видалити насправді
 
 # Режим відбору репозиторіїв: all | keep_list | pattern
@@ -28,8 +28,20 @@ MODE="keep_list"
 
 # MODE=keep_list -> видаляється все, КРІМ цих репозиторіїв
 KEEP=(
-  "important-repo-1"
-  "important-repo-2"
+  "Skills-Claude"
+  "newT_PL04"
+  "newT_PL03"
+  "newT_PL02"
+  "newT_PL01"
+  "newT_PL00"
+  "denmark-social"
+  "dk1-onln"
+  "romania-social"
+  "pt1-onln"
+  "portugal-social"
+  "PL_10"
+  "PL_9"
+  "PL_8"
 )
 
 # MODE=pattern -> видаляються лише репозиторії, назва яких підходить під grep -E шаблон
