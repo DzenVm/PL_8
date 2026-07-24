@@ -1,32 +1,26 @@
 #!/usr/bin/env bash
 #
 # bulk-delete-github-repos.sh
-# Масове видалення репозиторіїв на GitHub через GitHub CLI (gh).
+# Масове видалення репозиторіїв на GitHub через curl (не потребує gh CLI).
 #
 # ПОПЕРЕДЖЕННЯ: видалення репозиторію на GitHub НЕЗВОРОТНЄ.
-# Кошика немає — код, issues, PR, wiki, релізи зникають назавжди.
-#
-# ПЕРЕД ЗАПУСКОМ:
-#   1. Встановіть GitHub CLI: https://cli.github.com
-#   2. gh auth login
-#   3. gh auth refresh -h github.com -s delete_repo   (дає право на видалення)
 #
 # ЯК КОРИСТУВАТИСЯ:
-#   1. Заповніть налаштування нижче
-#   2. Запустіть з DRY_RUN=true — побачите список БЕЗ видалення
-#   3. Якщо все правильно — поставте DRY_RUN=false, запустіть знову й підтвердіть
+#   1. Створіть Personal Access Token на GitHub:
+#      Settings → Developer settings → Personal access tokens → Tokens (classic)
+#      Поставте галочку "delete_repo" → Generate token
+#   2. Запустіть:  bash bulk-delete-github-repos.sh
+#   3. Введіть токен коли запитає
+#   4. Спочатку буде DRY RUN — лише список без видалення
+#   5. Якщо список правильний — запустіть знову і введіть DELETE
 
 set -euo pipefail
 
 # ============ НАЛАШТУВАННЯ ============
 
-USERNAME="DzenVm"            # ваш логін на GitHub
-DRY_RUN=true                 # true = лише показати список, false = видалити насправді
+USERNAME="DzenVm"
+DRY_RUN=true   # змініть на false щоб видаляти насправді
 
-# Режим відбору репозиторіїв: all | keep_list | pattern
-MODE="keep_list"
-
-# MODE=keep_list -> видаляється все, КРІМ цих репозиторіїв
 KEEP=(
   "Skills-Claude"
   "newT_PL04"
@@ -44,66 +38,90 @@ KEEP=(
   "PL_8"
 )
 
-# MODE=pattern -> видаляються лише репозиторії, назва яких підходить під grep -E шаблон
-PATTERN="^test-|^old-|-backup$"
-
 # ========================================
 
-mapfile -t all_repos < <(gh repo list "$USERNAME" --limit 1000 --json name -q '.[].name')
+read -rsp "Введіть GitHub Personal Access Token: " TOKEN
+echo ""
+
+fetch_repos() {
+  local page=1
+  while true; do
+    local result
+    result=$(curl -s \
+      -H "Authorization: token $TOKEN" \
+      -H "Accept: application/vnd.github+json" \
+      "https://api.github.com/user/repos?per_page=100&page=$page&type=owner")
+
+    local count
+    count=$(echo "$result" | python3 -c "import json,sys; d=json.load(sys.stdin); print(len(d))" 2>/dev/null || echo 0)
+
+    if [ "$count" -eq 0 ]; then break; fi
+
+    echo "$result" | python3 -c "import json,sys; [print(r['name']) for r in json.load(sys.stdin)]"
+    ((page++))
+  done
+}
+
+echo "Отримую список репозиторіїв..."
+mapfile -t all_repos < <(fetch_repos)
 
 if [ "${#all_repos[@]}" -eq 0 ]; then
-  echo "Не знайдено жодного репозиторію для $USERNAME."
-  exit 0
+  echo "Не знайдено репозиторіїв. Перевірте токен."
+  exit 1
 fi
 
 to_delete=()
 for repo in "${all_repos[@]}"; do
-  case "$MODE" in
-    all)
-      to_delete+=("$repo")
-      ;;
-    keep_list)
-      keep=false
-      if [ "${#KEEP[@]}" -gt 0 ]; then
-        for k in "${KEEP[@]}"; do
-          [[ "$repo" == "$k" ]] && keep=true
-        done
-      fi
-      [ "$keep" = false ] && to_delete+=("$repo")
-      ;;
-    pattern)
-      echo "$repo" | grep -qE "$PATTERN" && to_delete+=("$repo")
-      ;;
-  esac
+  keep=false
+  for k in "${KEEP[@]}"; do
+    [[ "$repo" == "$k" ]] && keep=true && break
+  done
+  [ "$keep" = false ] && to_delete+=("$repo")
 done
 
-echo "Знайдено репозиторіїв: ${#all_repos[@]}. Буде видалено: ${#to_delete[@]}"
+echo ""
+echo "Всього репозиторіїв: ${#all_repos[@]}"
+echo "Захищено (не чіпаємо): ${#KEEP[@]}"
+echo "Буде видалено: ${#to_delete[@]}"
+echo ""
 
 if [ "${#to_delete[@]}" -eq 0 ]; then
-  echo "Немає що видаляти згідно з поточними налаштуваннями."
+  echo "Немає що видаляти."
   exit 0
 fi
 
+echo "Список для видалення:"
 printf '  - %s\n' "${to_delete[@]}"
 
 if [ "$DRY_RUN" = true ]; then
   echo ""
-  echo "Це DRY RUN — нічого не видалено."
-  echo "Перевірте список вище і поставте DRY_RUN=false, щоб видалити насправді."
+  echo "DRY RUN — нічого не видалено."
+  echo "Відкрийте скрипт, змініть DRY_RUN=true на DRY_RUN=false і запустіть знову."
   exit 0
 fi
 
 echo ""
-read -rp "Введіть 'DELETE' щоб підтвердити НЕЗВОРОТНЕ видалення ${#to_delete[@]} репозиторіїв: " confirm
+read -rp "Введіть 'DELETE' для підтвердження НЕЗВОРОТНОГО видалення ${#to_delete[@]} репозиторіїв: " confirm
 if [ "$confirm" != "DELETE" ]; then
   echo "Скасовано."
   exit 1
 fi
 
 for repo in "${to_delete[@]}"; do
-  echo "Видаляю: $repo"
-  gh repo delete "$USERNAME/$repo" --yes
-  sleep 1
+  echo -n "Видаляю $repo ... "
+  response=$(curl -s -o /dev/null -w "%{http_code}" \
+    -X DELETE \
+    -H "Authorization: token $TOKEN" \
+    -H "Accept: application/vnd.github+json" \
+    "https://api.github.com/repos/$USERNAME/$repo")
+
+  if [ "$response" = "204" ]; then
+    echo "OK"
+  else
+    echo "ПОМИЛКА (HTTP $response)"
+  fi
+  sleep 0.5
 done
 
-echo "Готово. Видалено ${#to_delete[@]} репозиторіїв."
+echo ""
+echo "Готово."
