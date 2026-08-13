@@ -3,7 +3,7 @@ import { readFile, readdir } from "node:fs/promises";
 import path from "node:path";
 
 const root = process.cwd();
-const ignored = new Set([".git", ".next", "node_modules"]);
+const ignored = new Set([".git", ".next", ".vercel", "node_modules"]);
 const textExtensions = new Set([".js", ".mjs", ".ts", ".tsx", ".json", ".md"]);
 const excludedFiles = new Set([
   path.join(root, "README.md"),

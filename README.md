@@ -33,6 +33,7 @@ npm run start
 ## Domena i routing
 
 - Domena produkcyjna sandboxu: `studiadesi.site`. Jedynym źródłem adresu jest `lib/site.ts`.
+- Funkcje Vercel są uruchamiane w regionie `fra1` (Frankfurt), bliżej ruchu z Polski i Turcji oraz europejskiego Server B.
 - Repozytorium nie zawiera klienta `probe`, publicznych tokenów ani bezpośrednich wywołań `api.studiadesi.site` z przeglądarki.
 - Zwykła strona pozostaje bezpiecznym zachowaniem domyślnym przy błędzie konfiguracji PL_8. Opcjonalna telemetria Server B nie blokuje przekierowania. Awaria zewnętrznego celu po opuszczeniu PL_8 pozostaje osobnym ryzykiem i wymaga monitorowania.
 
