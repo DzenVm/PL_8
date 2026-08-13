@@ -4,12 +4,11 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import CookieConsent from "@/components/CookieConsent";
 import { contact } from "@/lib/contact";
+import { site } from "@/lib/site";
 import "./globals.css";
 
-const siteUrl = "https://pracownia-wnetrz.example";
-
 export const metadata: Metadata = {
-  metadataBase: new URL(siteUrl),
+  metadataBase: new URL(site.origin),
   title: {
     default: "Projektowanie wnętrz — 5 rodzajów usług | Konsultacja projektanta",
     template: "%s | Projektowanie wnętrz",
@@ -29,7 +28,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "pl_PL",
-    url: siteUrl,
+    url: site.origin,
     siteName: "Projektowanie wnętrz",
     title: "Projektowanie wnętrz — 5 rodzajów usług",
     description:
@@ -55,7 +54,7 @@ const organizationJsonLd = {
   name: "Pracownia projektowania wnętrz",
   description:
     "Pracownia projektowania wnętrz: projekty mieszkań, domów, lokali komercyjnych, pojedynczych pomieszczeń oraz wizualizacje 3D.",
-  url: siteUrl,
+  url: site.origin,
   address: {
     "@type": "PostalAddress",
     streetAddress: contact.street,

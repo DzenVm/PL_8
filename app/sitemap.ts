@@ -1,7 +1,6 @@
 import type { MetadataRoute } from "next";
 import { services } from "@/lib/services";
-
-const siteUrl = "https://pracownia-wnetrz.example";
+import { site } from "@/lib/site";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const staticRoutes = [
@@ -11,12 +10,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/polityka-prywatnosci",
     "/polityka-cookies",
   ].map((path) => ({
-    url: `${siteUrl}${path}`,
+    url: `${site.origin}${path}`,
     lastModified: new Date(),
   }));
 
   const serviceRoutes = services.map((service) => ({
-    url: `${siteUrl}/uslugi/${service.slug}`,
+    url: `${site.origin}/uslugi/${service.slug}`,
     lastModified: new Date(),
   }));
 

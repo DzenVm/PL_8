@@ -3,8 +3,7 @@ import Link from "next/link";
 import { headers } from "next/headers";
 import { notFound } from "next/navigation";
 import { services, stages, getServiceBySlug } from "@/lib/services";
-
-const siteUrl = "https://pracownia-wnetrz.example";
+import { site } from "@/lib/site";
 
 export function generateStaticParams() {
   return services.map((service) => ({ slug: service.slug }));
@@ -82,18 +81,18 @@ export default async function ServicePage({
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
-      { "@type": "ListItem", position: 1, name: "Strona główna", item: siteUrl },
+      { "@type": "ListItem", position: 1, name: "Strona główna", item: site.origin },
       {
         "@type": "ListItem",
         position: 2,
         name: "Usługi",
-        item: `${siteUrl}/#uslugi`,
+        item: `${site.origin}/#uslugi`,
       },
       {
         "@type": "ListItem",
         position: 3,
         name: service.title,
-        item: `${siteUrl}/uslugi/${service.slug}`,
+        item: `${site.origin}/uslugi/${service.slug}`,
       },
     ],
   };

@@ -30,9 +30,13 @@ npm run start
 - `proxy.ts` — generuje nonce i nagłówek CSP na każde żądanie (Next.js 16 "proxy", dawniej middleware)
 - `next.config.ts` — pozostałe nagłówki bezpieczeństwa (HSTS, X-Frame-Options i inne)
 
-## Uwagi
+## Domena i routing
 
-- Domena-placeholder: `pracownia-wnetrz.example` (ustawiona w `app/layout.tsx`, `app/sitemap.ts`, `app/robots.ts`) — zamienić na docelową domenę przed wdrożeniem.
+- Domena produkcyjna sandboxu: `studiadesi.site`. Jedynym źródłem adresu jest `lib/site.ts`.
+- Repozytorium nie zawiera klienta `probe`, publicznych tokenów ani bezpośrednich wywołań `api.studiadesi.site` z przeglądarki.
+- Zwykła strona pozostaje bezpiecznym zachowaniem domyślnym przy każdym błędzie infrastruktury.
+
+## Uwagi
 - Brak nazwy pracowni i logo celowo — miejsce w nagłówku pozostaje puste, bez tekstowego placeholdera; w stopce i danych firmy widnieje wyłącznie opisowa fraza „Pracownia projektowania wnętrz" oraz realistyczne dane (NIP, REGON, adres, telefon).
 - Żadnych nazw marek mebli/armatury/materiałów w treści — tylko typy materiałów i style.
 - Brak Google Analytics, pikseli reklamowych i skryptów firm trzecich — zgodnie z opisem w polityce cookies.
