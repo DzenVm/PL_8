@@ -19,6 +19,7 @@ describe("sendTdsEvent", () => {
       TDS_EVENT_URL: "https://events.example/v4/index.php",
       TDS_SHARED_SECRET: testSecret,
       TDS_KEY_ID: "test-v1",
+      TDS_SITE_ID: "PL_8",
       TDS_TIMEOUT_MS: "900",
     });
 
@@ -41,6 +42,7 @@ describe("sendTdsEvent", () => {
     const headers = new Headers(init.headers);
     const signature = headers.get("X-TDS-Signature")?.slice(3);
     const body = String(init.body);
+    expect(JSON.parse(body).site_id).toBe("PL_8");
     const canonical = [
       "v1",
       "POST",
@@ -83,6 +85,8 @@ describe("sendTdsEvent", () => {
       TDS_ALLOWED_TARGET_HOSTS: "tracker.example",
       TDS_EVENT_URL: "https://events.example/v4/index.php",
       TDS_SHARED_SECRET: "s".repeat(32),
+      TDS_KEY_ID: "test-v1",
+      TDS_SITE_ID: "PL_8",
     });
 
     await expect(

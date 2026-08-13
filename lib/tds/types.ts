@@ -21,7 +21,8 @@ export type TdsConfig = {
   correlationParameter: string;
   eventUrl: string | null;
   sharedSecret: string | null;
-  keyId: string;
+  keyId: string | null;
+  siteId: string | null;
   timeoutMs: number;
   configurationError: string | null;
   eventConfigurationError: string | null;
@@ -29,7 +30,7 @@ export type TdsConfig = {
 
 export type TdsEvent = {
   schema_version: 1;
-  site_id: "PL_8";
+  site_id: string;
   correlation_id: string;
   occurred_at: string;
   path: "/";

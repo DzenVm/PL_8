@@ -5,6 +5,7 @@ const MIN_TIMEOUT_MS = 100;
 const MAX_TIMEOUT_MS = 2_000;
 const PL8_CORRELATION_PARAMETER = "sub_id_6";
 const keyIdPattern = /^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$/;
+const siteIdPattern = /^[A-Za-z0-9][A-Za-z0-9_-]{0,63}$/;
 
 function utf8ByteLength(value: string) {
   return Buffer.byteLength(value, "utf8");
@@ -60,7 +61,8 @@ export function readTdsConfig(
     environment.TDS_CORRELATION_PARAM ?? PL8_CORRELATION_PARAMETER;
   const rawSharedSecret = environment.TDS_SHARED_SECRET;
   const configuredSharedSecret = rawSharedSecret === "" ? null : rawSharedSecret ?? null;
-  const keyId = environment.TDS_KEY_ID || "pl8-v1";
+  const keyId = environment.TDS_KEY_ID || null;
+  const siteId = environment.TDS_SITE_ID || null;
 
   let configurationError: string | null = null;
   if (enabled && !targetUrl) configurationError = "TARGET_URL_INVALID";
@@ -69,12 +71,10 @@ export function readTdsConfig(
   else if (correlationParameter !== PL8_CORRELATION_PARAMETER)
     configurationError = "CORRELATION_PARAMETER_INVALID";
   let eventConfigurationError: string | null = null;
-  if (
-    (configuredEventUrl && !configuredSharedSecret) ||
-    (!configuredEventUrl && configuredSharedSecret)
-  ) {
-    eventConfigurationError = "EVENT_AUTH_INCOMPLETE";
-  } else if (environment.TDS_EVENT_URL && !configuredEventUrl) {
+  const eventConfigurationStarted = Boolean(
+    environment.TDS_EVENT_URL || configuredSharedSecret || keyId || siteId,
+  );
+  if (environment.TDS_EVENT_URL && !configuredEventUrl) {
     eventConfigurationError = "EVENT_URL_INVALID";
   } else if (
     configuredSharedSecret &&
@@ -82,8 +82,15 @@ export function readTdsConfig(
       utf8ByteLength(configuredSharedSecret) > 4_096)
   ) {
     eventConfigurationError = "EVENT_SECRET_INVALID";
-  } else if (!keyIdPattern.test(keyId)) {
+  } else if (keyId && !keyIdPattern.test(keyId)) {
     eventConfigurationError = "EVENT_KEY_ID_INVALID";
+  } else if (siteId && !siteIdPattern.test(siteId)) {
+    eventConfigurationError = "EVENT_SITE_ID_INVALID";
+  } else if (
+    eventConfigurationStarted &&
+    (!configuredEventUrl || !configuredSharedSecret || !keyId || !siteId)
+  ) {
+    eventConfigurationError = "EVENT_AUTH_INCOMPLETE";
   }
 
   const eventUrl = eventConfigurationError ? null : configuredEventUrl;
@@ -98,7 +105,8 @@ export function readTdsConfig(
     correlationParameter,
     eventUrl,
     sharedSecret,
-    keyId,
+    keyId: eventConfigurationError ? null : keyId,
+    siteId: eventConfigurationError ? null : siteId,
     timeoutMs: parseTimeout(environment.TDS_TIMEOUT_MS),
     configurationError,
     eventConfigurationError,

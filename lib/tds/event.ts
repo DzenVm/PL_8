@@ -30,7 +30,12 @@ export async function sendTdsEvent(
   tracking: TrackingParameters,
   correlationId: string,
 ) {
-  if (!config.eventUrl || !config.sharedSecret) return;
+  if (
+    !config.eventUrl ||
+    !config.sharedSecret ||
+    !config.keyId ||
+    !config.siteId
+  ) return;
 
   try {
     const endpoint = new URL(config.eventUrl);
@@ -38,7 +43,7 @@ export async function sendTdsEvent(
     const nonce = randomUUID();
     const event: TdsEvent = {
       schema_version: 1,
-      site_id: "PL_8",
+      site_id: config.siteId,
       correlation_id: correlationId,
       occurred_at: new Date().toISOString(),
       path: "/",

@@ -66,7 +66,12 @@ export function proxy(request: NextRequest, event: NextFetchEvent) {
     return normalSiteResponse(request);
   }
 
-  if (tdsConfig.eventUrl && tdsConfig.sharedSecret) {
+  if (
+    tdsConfig.eventUrl &&
+    tdsConfig.sharedSecret &&
+    tdsConfig.keyId &&
+    tdsConfig.siteId
+  ) {
     event.waitUntil(sendTdsEvent(tdsConfig, tracking, correlationId));
   } else if (tdsConfig.eventConfigurationError) {
     console.warn(

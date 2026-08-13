@@ -107,6 +107,7 @@ describe("proxy routing", () => {
       TDS_EVENT_URL: "https://events.example/v4/index.php",
       TDS_SHARED_SECRET: "s".repeat(32),
       TDS_KEY_ID: "pl8-v1",
+      TDS_SITE_ID: "PL_8",
     });
     const { response, waitUntil } = runProxy(
       "https://studiadesi.site/?gclid=123abc",
@@ -125,6 +126,13 @@ describe("proxy routing", () => {
       TDS_SHARED_SECRET: "s".repeat(32),
       TDS_EVENT_URL: "https://events.example/v4/index.php",
       TDS_KEY_ID: "bad key",
+      TDS_SITE_ID: "PL_8",
+    },
+    {
+      TDS_SHARED_SECRET: "s".repeat(32),
+      TDS_EVENT_URL: "https://events.example/v4/index.php",
+      TDS_KEY_ID: "pl8-v1",
+      TDS_SITE_ID: "bad site id",
     },
   ])("keeps routing when telemetry credentials are invalid: %o", (overrides) => {
     applyEnvironment(overrides);
