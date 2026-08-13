@@ -50,9 +50,14 @@ export default function CookiePolicyPage() {
 
           <h3>Analityczne i marketingowe</h3>
           <p>
-            <strong>Nie są wykorzystywane.</strong> Strona nie zawiera
-            skryptów Google Analytics, Google Ads, Meta Pixel ani żadnych
-            innych narzędzi analitycznych lub reklamowych firm trzecich.
+            Strona nie zapisuje analitycznych ani marketingowych plików cookie
+            i nie uruchamia w przeglądarce skryptów Google Analytics lub Meta
+            Pixel. Jeżeli wejście pochodzi z linku reklamowego, identyfikator
+            kliknięcia zawarty w adresie URL może być przetworzony po stronie
+            serwera i przekazany do zadeklarowanego systemu kampanii. Jest to
+            pomiar wejścia reklamowego, ale nie powoduje zapisania dodatkowego
+            pliku cookie przez tę stronę. Zakres, cele i odbiorcy tego
+            przetwarzania są opisani w polityce prywatności.
           </p>
 
           <h2>Zarządzanie zgodą</h2>
@@ -62,7 +67,9 @@ export default function CookiePolicyPage() {
             cookies pojawi się ponownie przy kolejnej wizycie.
           </p>
 
-          <p style={{ fontSize: "0.85rem" }}>Ostatnia aktualizacja: lipiec 2026.</p>
+          <p style={{ fontSize: "0.85rem" }}>
+            Ostatnia aktualizacja: sierpień 2026.
+          </p>
         </div>
       </div>
     </>

@@ -2,15 +2,21 @@
   "name": "studio-interior",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": "24.x"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test:foundation": "node scripts/check-clean-foundation.mjs"
+    "test": "vitest run",
+    "test:bundle": "node scripts/check-client-bundle.mjs",
+    "test:foundation": "node scripts/check-clean-foundation.mjs",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "next": "16.2.10",
+    "next": "16.3.0",
     "react": "19.2.4",
     "react-dom": "19.2.4"
   },
@@ -19,7 +25,8 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
-    "eslint-config-next": "16.2.10",
-    "typescript": "^5"
+    "eslint-config-next": "16.3.0",
+    "typescript": "^5",
+    "vitest": "3.2.6"
   }
 }
