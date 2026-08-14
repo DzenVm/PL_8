@@ -48,6 +48,7 @@ fi
 
 for required_path in \
   src/TelemetryEndpoint.php \
+  bin/palladium-smoke.php \
   bin/prune-logs.php \
   bin/validate-config.php \
   tests/self-test.php \
@@ -95,6 +96,7 @@ if [ -L "$app_dir/current" ]; then
 fi
 
 "$php84" -l "$staging_dir/src/TelemetryEndpoint.php" >/dev/null
+"$php84" -l "$staging_dir/bin/palladium-smoke.php" >/dev/null
 "$php84" -l "$staging_dir/bin/prune-logs.php" >/dev/null
 "$php84" -l "$staging_dir/bin/validate-config.php" >/dev/null
 "$php84" -l "$staging_dir/deploy/hosting-ukraine-index.php" >/dev/null
@@ -185,7 +187,7 @@ rollback() {
       if [ "$had_v4" -eq 0 ]; then rmdir "$web_dir/v4" 2>/dev/null || true; fi
     fi
     if [ "$release_created" -eq 1 ]; then
-      rm -f "$release_dir/src/TelemetryEndpoint.php" "$release_dir/bin/prune-logs.php" "$release_dir/bin/validate-config.php"
+      rm -f "$release_dir/src/TelemetryEndpoint.php" "$release_dir/bin/palladium-smoke.php" "$release_dir/bin/prune-logs.php" "$release_dir/bin/validate-config.php"
       rmdir "$release_dir/src" "$release_dir/bin" "$release_dir" 2>/dev/null || true
     fi
     if [ "$generated_request_key" -eq 1 ]; then rm -f "$private_dir/request-hmac.key"; fi
@@ -219,6 +221,7 @@ install -m 0600 "$staging_dir/deploy/hosting-ukraine-index.php" "$index_new"
 install -d -m 0700 "$release_dir" "$release_dir/src" "$release_dir/bin"
 release_created=1
 install -m 0600 "$staging_dir/src/TelemetryEndpoint.php" "$release_dir/src/TelemetryEndpoint.php"
+install -m 0700 "$staging_dir/bin/palladium-smoke.php" "$release_dir/bin/palladium-smoke.php"
 install -m 0700 "$staging_dir/bin/prune-logs.php" "$release_dir/bin/prune-logs.php"
 install -m 0700 "$staging_dir/bin/validate-config.php" "$release_dir/bin/validate-config.php"
 
