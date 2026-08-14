@@ -844,6 +844,27 @@ final class CurlPalladiumTransport implements PalladiumTransport
 
 final class PalladiumDecisionProvider implements DecisionProvider
 {
+    public const FORWARDED_HEADER_NAMES = [
+        'accept',
+        'accept-encoding',
+        'accept-language',
+        'cache-control',
+        'cookie',
+        'dnt',
+        'origin',
+        'pragma',
+        'referer',
+        'sec-ch-ua',
+        'sec-ch-ua-mobile',
+        'sec-ch-ua-platform',
+        'sec-fetch-dest',
+        'sec-fetch-mode',
+        'sec-fetch-site',
+        'upgrade-insecure-requests',
+        'user-agent',
+        'x-requested-with',
+    ];
+
     private PalladiumTransport $transport;
 
     public function __construct(
@@ -857,7 +878,7 @@ final class PalladiumDecisionProvider implements DecisionProvider
     {
         /** @var array<string, string> $tracking */
         $tracking = $event['tracking'];
-        /** @var array<string, string> $client */
+        /** @var array<string, mixed> $client */
         $client = $event['client'];
         // The official PHP integration receives a normal GET: its POST-only
         // request/jsrequest collectors are therefore both empty. Tracking
@@ -876,6 +897,13 @@ final class PalladiumDecisionProvider implements DecisionProvider
             'HTTP_USER_AGENT' => $client['user_agent'],
             'bannerSource' => 'adwords',
         ];
+
+        /** @var array<string, string> $forwardedHeaders */
+        $forwardedHeaders = $client['headers'];
+        foreach ($forwardedHeaders as $name => $value) {
+            $server['HTTP_' . strtoupper(str_replace('-', '_', $name))] = $value;
+        }
+
         foreach ([
             'accept' => 'HTTP_ACCEPT',
             'accept_language' => 'HTTP_ACCEPT_LANGUAGE',
@@ -1110,6 +1138,7 @@ final class TelemetryEndpoint
     private const CLIENT_FIELDS = [
         'accept',
         'accept_language',
+        'headers',
         'host',
         'ip',
         'referer',
@@ -1362,7 +1391,32 @@ final class TelemetryEndpoint
                 return 'invalid_client_context';
             }
             foreach ($client as $name => $value) {
+                if ($name === 'headers') {
+                    continue;
+                }
                 if (!is_string($value) || strlen($value) > 1024 || preg_match('/[\x00-\x1f\x7f]/', $value) === 1) {
+                    return 'invalid_client_context';
+                }
+            }
+            if (!is_array($client['headers']) || self::isList($client['headers'])) {
+                return 'invalid_client_context';
+            }
+            $headerBytes = 0;
+            foreach ($client['headers'] as $name => $value) {
+                if (
+                    !is_string($name)
+                    || (
+                        !in_array($name, PalladiumDecisionProvider::FORWARDED_HEADER_NAMES, true)
+                        && !str_starts_with($name, 'sec-')
+                    )
+                    || !is_string($value)
+                    || strlen($value) > 512
+                    || preg_match('/[\x00-\x1f\x7f]/', $value) === 1
+                ) {
+                    return 'invalid_client_context';
+                }
+                $headerBytes += strlen($name) + strlen($value);
+                if ($headerBytes > 4096) {
                     return 'invalid_client_context';
                 }
             }

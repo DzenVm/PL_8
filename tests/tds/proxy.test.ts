@@ -44,7 +44,18 @@ async function runProxy(
     headers: {
       "user-agent": userAgent,
       "x-vercel-forwarded-for": "203.0.113.10",
+      accept: "text/html,application/xhtml+xml",
       "accept-language": "tr-TR",
+      "accept-encoding": "gzip, br",
+      "sec-ch-ua": '"Chromium";v="140"',
+      "sec-ch-ua-mobile": "?0",
+      "sec-ch-ua-platform": '"macOS"',
+      "sec-ch-ua-full-version-list": '"Chromium";v="140.0.7339.0"',
+      "sec-fetch-dest": "document",
+      "sec-fetch-mode": "navigate",
+      "sec-fetch-site": "none",
+      "upgrade-insecure-requests": "1",
+      cookie: "consent=accepted",
     },
     method,
   }));
@@ -136,6 +147,13 @@ describe("proxy routing", () => {
     const request = JSON.parse(String(fetchMock.mock.calls[0][1]?.body));
     expect(request.client.ip).toBe("203.0.113.10");
     expect(request.client.user_agent).toBe("AdsBot-Google");
+    expect(request.client.headers).toMatchObject({
+      "accept-encoding": "gzip, br",
+      "sec-ch-ua": '"Chromium";v="140"',
+      "sec-fetch-mode": "navigate",
+      "sec-ch-ua-full-version-list": '"Chromium";v="140.0.7339.0"',
+      cookie: "consent=accepted",
+    });
   });
 
   it("does not make its own decision depend on User-Agent", async () => {

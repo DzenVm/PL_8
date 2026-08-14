@@ -113,6 +113,21 @@ function validDecisionEvent(int $seed = 1): array
         'ip' => '203.0.113.10',
         'referer' => '',
         'user_agent' => 'Mozilla/5.0 Test Browser',
+        'headers' => [
+            'accept' => 'text/html,application/xhtml+xml',
+            'accept-encoding' => 'gzip, br',
+            'accept-language' => 'tr-TR,tr;q=0.9',
+            'sec-ch-ua' => '"Chromium";v="140"',
+            'sec-ch-ua-full-version-list' => '"Chromium";v="140.0.7339.0"',
+            'sec-ch-ua-mobile' => '?0',
+            'sec-ch-ua-platform' => '"macOS"',
+            'sec-fetch-dest' => 'document',
+            'sec-fetch-mode' => 'navigate',
+            'sec-fetch-site' => 'none',
+            'upgrade-insecure-requests' => '1',
+            'user-agent' => 'Mozilla/5.0 Test Browser',
+            'cookie' => 'consent=accepted',
+        ],
     ];
     return $event;
 }
@@ -341,6 +356,10 @@ assertSameValue('Palladium allow mapped', $providerAllow->decision, 'allow');
 assertSameValue('Palladium allow target mapped', $providerAllow->target, 'https://dzentds.top/d4h9Jb');
 assertSameValue('Palladium payload uses real IP', $allowTransport->lastPayload['server']['REMOTE_ADDR'] ?? null, '203.0.113.10');
 assertSameValue('Palladium payload uses real UA', $allowTransport->lastPayload['server']['HTTP_USER_AGENT'] ?? null, 'Mozilla/5.0 Test Browser');
+assertSameValue('Palladium payload forwards truthful client hints', $allowTransport->lastPayload['server']['HTTP_SEC_CH_UA'] ?? null, '"Chromium";v="140"');
+assertSameValue('Palladium payload forwards extended client hints', $allowTransport->lastPayload['server']['HTTP_SEC_CH_UA_FULL_VERSION_LIST'] ?? null, '"Chromium";v="140.0.7339.0"');
+assertSameValue('Palladium payload forwards truthful fetch context', $allowTransport->lastPayload['server']['HTTP_SEC_FETCH_MODE'] ?? null, 'navigate');
+assertSameValue('Palladium payload forwards cookie header', $allowTransport->lastPayload['server']['HTTP_COOKIE'] ?? null, 'consent=accepted');
 assertSameValue('Palladium payload matches GET request collector', $allowTransport->lastPayload['request'] ?? null, []);
 assertSameValue(
     'Palladium payload keeps click ID in query',

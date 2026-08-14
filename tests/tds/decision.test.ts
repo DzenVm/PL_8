@@ -11,6 +11,7 @@ const client = {
   accept: "text/html",
   accept_language: "tr-TR",
   referer: "",
+  headers: {},
 };
 
 function configuredEnvironment() {

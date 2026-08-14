@@ -36,6 +36,7 @@ export type TdsClientContext = {
   accept: string;
   accept_language: string;
   referer: string;
+  headers: Record<string, string>;
 };
 
 export type TdsDecisionRequest = {

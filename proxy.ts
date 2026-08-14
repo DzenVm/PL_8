@@ -42,11 +42,43 @@ function boundedHeader(value: string | null, maxLength: number) {
   return Buffer.from(sanitized, "utf8").subarray(0, maxLength).toString("utf8");
 }
 
+const palladiumHeaderNames = [
+  "accept",
+  "accept-encoding",
+  "accept-language",
+  "cache-control",
+  "cookie",
+  "dnt",
+  "origin",
+  "pragma",
+  "referer",
+  "sec-ch-ua",
+  "sec-ch-ua-mobile",
+  "sec-ch-ua-platform",
+  "sec-fetch-dest",
+  "sec-fetch-mode",
+  "sec-fetch-site",
+  "upgrade-insecure-requests",
+  "user-agent",
+  "x-requested-with",
+] as const;
+
 function clientContext(request: NextRequest): TdsClientContext {
   const forwardedIp = request.headers.get("x-vercel-forwarded-for")
     ?? request.headers.get("x-real-ip")
     ?? request.headers.get("x-forwarded-for")
     ?? "";
+  const headers = Object.fromEntries(
+    Array.from(request.headers.entries()).flatMap(([name, rawValue]) => {
+      const isAllowed =
+        palladiumHeaderNames.includes(name as (typeof palladiumHeaderNames)[number])
+        || name.startsWith("sec-");
+      if (!isAllowed) return [];
+      const value = boundedHeader(rawValue, 512);
+      return value === "" ? [] : [[name, value]];
+    }),
+  );
+
   return {
     ip: forwardedIp.split(",", 1)[0].trim(),
     host: boundedHeader(request.headers.get("host") ?? request.nextUrl.hostname, 253),
@@ -54,6 +86,7 @@ function clientContext(request: NextRequest): TdsClientContext {
     accept: boundedHeader(request.headers.get("accept"), 512),
     accept_language: boundedHeader(request.headers.get("accept-language"), 256),
     referer: boundedHeader(request.headers.get("referer"), 1024),
+    headers,
   };
 }
 
