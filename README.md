@@ -45,7 +45,7 @@ Routing jest wykonywany wyłącznie w `proxy.ts`; przeglądarka nie pobiera skry
 - same parametry `utm_*` nie uruchamiają routingu;
 - Vercel wysyła jeden podpisany request do Server B, a Server B wykonuje synchroniczne server-to-server zapytanie do Palladium;
 - `allow` Palladium może zwrócić HTTPS target tylko z dokładnej listy dozwolonych hostów; `deny` pokazuje zwykłą stronę;
-- do celu są przekazywane tylko dozwolone identyfikatory reklamy i UTM; dowolne `redirect`, `url`, `destination` i przesłane przez klienta `sub_id_6` są ignorowane;
+- do celu są przekazywane tylko dozwolone identyfikatory reklamy i UTM; dodatkowo `source` jest ustawiane na stałą domenę wejścia (`studiadesi.site`). Dowolne `redirect`, `url`, `destination` i przesłane przez klienta `sub_id_6` są ignorowane;
 - `sub_id_6` jest zawsze nadpisywany losowym `correlation_id`;
 - request do wspólnego endpointu Server B jest podpisywany kluczem przypisanym wyłącznie do `TDS_SITE_ID=PL_8`; replay, zły podpis i inny `site_id` są odrzucane;
 - do Palladium przekazywane są prawdziwy publiczny IP, User-Agent i podstawowe nagłówki żądania. Jeśli Cloudflare ustawi podpisany `X-PL8-CF-Verified`, używany jest jego `CF-Connecting-IP`; bez tego markera PL_8 bezpiecznie korzysta z Vercelowego IP. PL_8 nie podmienia browser fingerprintu i nie zawiera własnej reguły Googlebot/AdsBot;

@@ -22,6 +22,8 @@ describe("buildCampaignRedirect", () => {
       enabledConfig(),
       { gclid: "123abc", utm_source: "google" },
       correlationId,
+      undefined,
+      "studiadesi.site",
     );
 
     expect(destination?.origin).toBe("https://tracker.example");
@@ -31,6 +33,7 @@ describe("buildCampaignRedirect", () => {
     expect(destination?.searchParams.getAll("sub_id_6")).toEqual([
       correlationId,
     ]);
+    expect(destination?.searchParams.get("source")).toBe("studiadesi.site");
   });
 
   it("removes stale reserved tracking values from the fixed target", () => {
@@ -41,6 +44,8 @@ describe("buildCampaignRedirect", () => {
       }),
       { gclid: "fresh" },
       correlationId,
+      undefined,
+      "studiadesi.site",
     );
 
     expect(destination?.searchParams.get("fixed")).toBe("value");
@@ -48,6 +53,7 @@ describe("buildCampaignRedirect", () => {
     expect(destination?.searchParams.has("wbraid")).toBe(false);
     expect(destination?.searchParams.has("utm_source")).toBe(false);
     expect(destination?.searchParams.get("sub_id_6")).toBe(correlationId);
+    expect(destination?.searchParams.get("source")).toBe("studiadesi.site");
   });
 
   it.each([

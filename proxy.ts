@@ -4,6 +4,7 @@ import { isIP } from "node:net";
 import { readTdsConfig } from "./lib/tds/config";
 import { requestTdsDecision } from "./lib/tds/decision";
 import { buildCampaignRedirect } from "./lib/tds/redirect";
+import { site } from "./lib/site";
 import { extractTrackingParameters } from "./lib/tds/tracking";
 import type { TdsClientContext } from "./lib/tds/types";
 
@@ -185,6 +186,7 @@ export async function proxy(request: NextRequest) {
     tracking,
     correlationId,
     target,
+    site.hostname,
   );
   if (!destination) {
     const response = normalSiteResponse(request);

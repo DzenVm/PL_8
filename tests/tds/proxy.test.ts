@@ -82,6 +82,7 @@ describe("proxy routing", () => {
       expect(response.status).toBe(307);
       expect(destination.pathname).toBe("/from-palladium");
       expect(destination.searchParams.get(name)).toBe("123abc");
+      expect(destination.searchParams.get("source")).toBe("studiadesi.site");
       expect(destination.searchParams.get("sub_id_6")).toMatch(/^[0-9a-f-]{36}$/);
       expect(response.headers.get("cache-control")).toContain("no-store");
       expect(fetchMock).toHaveBeenCalledTimes(1);
