@@ -801,6 +801,9 @@ final class CurlPalladiumTransport implements PalladiumTransport
                 CURLOPT_FORBID_REUSE => true,
                 CURLOPT_NOSIGNAL => true,
                 CURLOPT_PROTOCOLS => CURLPROTO_HTTPS,
+                // Palladium advertises IPv6 addresses that are unreachable from
+                // this hosting network; use the verified IPv4 egress path.
+                CURLOPT_IPRESOLVE => CURL_IPRESOLVE_V4,
             ])) {
                 throw new UpstreamException('The Palladium request could not be configured.');
             }
