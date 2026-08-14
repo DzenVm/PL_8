@@ -11,6 +11,7 @@ use PL8\Telemetry\FileNonceStore;
 use PL8\Telemetry\HttpRequest;
 use PL8\Telemetry\PalladiumConfig;
 use PL8\Telemetry\PalladiumDecisionProvider;
+use PL8\Telemetry\PalladiumFormEncoder;
 use PL8\Telemetry\PalladiumTransport;
 use PL8\Telemetry\PrivacySafeEventLogger;
 use PL8\Telemetry\TelemetryEndpoint;
@@ -344,6 +345,11 @@ assertSameValue('Palladium payload keeps click ID', $allowTransport->lastPayload
 assertSameValue('Palladium payload has no fabricated client hints', array_key_exists('HTTP_SEC_CH_UA', $allowTransport->lastPayload['server'] ?? []), false);
 assertSameValue('Palladium payload follows official header allowlist', array_key_exists('REQUEST_METHOD', $allowTransport->lastPayload['server'] ?? []), false);
 assertSameValue('Palladium auth client ID mapped', $allowTransport->lastPayload['auth']['clientId'] ?? null, 'client-id');
+assertSameValue(
+    'Palladium form encoding matches downloaded integration',
+    PalladiumFormEncoder::encode(['server' => ['HTTP_USER_AGENT' => 'Browser Test']]),
+    'server%5BHTTP_USER_AGENT%5D=Browser+Test',
+);
 
 $denyTransport = new FakePalladiumTransport(200, '{"result":false}');
 $providerDeny = (new PalladiumDecisionProvider($palladiumConfig, $denyTransport))->decide(validDecisionEvent(26));

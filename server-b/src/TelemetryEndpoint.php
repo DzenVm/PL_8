@@ -768,6 +768,17 @@ interface PalladiumTransport
     ): array;
 }
 
+final class PalladiumFormEncoder
+{
+    /** @param array<string, mixed> $payload */
+    public static function encode(array $payload): string
+    {
+        // Match Palladium's downloaded integration exactly. Its statistics
+        // pipeline accepts the decision with RFC3986 encoding but does not log it.
+        return http_build_query($payload);
+    }
+}
+
 final class CurlPalladiumTransport implements PalladiumTransport
 {
     public function postForm(
@@ -790,7 +801,7 @@ final class CurlPalladiumTransport implements PalladiumTransport
             if (!curl_setopt_array($curl, [
                 CURLOPT_RETURNTRANSFER => true,
                 CURLOPT_POST => true,
-                CURLOPT_POSTFIELDS => http_build_query($payload, '', '&', PHP_QUERY_RFC3986),
+                CURLOPT_POSTFIELDS => PalladiumFormEncoder::encode($payload),
                 CURLOPT_HTTPHEADER => ['Content-Type: application/x-www-form-urlencoded'],
                 CURLOPT_CONNECTTIMEOUT_MS => $connectTimeoutMs,
                 CURLOPT_TIMEOUT_MS => $timeoutMs,
