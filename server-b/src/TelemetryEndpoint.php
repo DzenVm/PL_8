@@ -853,7 +853,6 @@ final class PalladiumDecisionProvider implements DecisionProvider
 
         $server = [
             'REMOTE_ADDR' => $client['ip'],
-            'REQUEST_METHOD' => 'GET',
             'REQUEST_SCHEME' => 'https',
             'SERVER_PROTOCOL' => 'HTTP/2',
             'SERVER_PORT' => '443',

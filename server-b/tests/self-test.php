@@ -342,6 +342,7 @@ assertSameValue('Palladium payload uses real IP', $allowTransport->lastPayload['
 assertSameValue('Palladium payload uses real UA', $allowTransport->lastPayload['server']['HTTP_USER_AGENT'] ?? null, 'Mozilla/5.0 Test Browser');
 assertSameValue('Palladium payload keeps click ID', $allowTransport->lastPayload['request']['gclid'] ?? null, 'raw-click-id-123abc');
 assertSameValue('Palladium payload has no fabricated client hints', array_key_exists('HTTP_SEC_CH_UA', $allowTransport->lastPayload['server'] ?? []), false);
+assertSameValue('Palladium payload follows official header allowlist', array_key_exists('REQUEST_METHOD', $allowTransport->lastPayload['server'] ?? []), false);
 assertSameValue('Palladium auth client ID mapped', $allowTransport->lastPayload['auth']['clientId'] ?? null, 'client-id');
 
 $denyTransport = new FakePalladiumTransport(200, '{"result":false}');
