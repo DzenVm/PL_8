@@ -900,10 +900,11 @@ final class PalladiumDecisionProvider implements DecisionProvider
         if (!is_array($reply) || ($reply !== [] && array_keys($reply) === range(0, count($reply) - 1))) {
             throw new UpstreamException('Palladium returned an invalid response.');
         }
-        if (($reply['result'] ?? null) === false) {
+        $resultValue = $reply['result'] ?? null;
+        if (in_array($resultValue, [false, 0, '0'], true)) {
             return new DecisionResult('deny', null, 'palladium_denied', $result['latency_ms']);
         }
-        if (($reply['result'] ?? null) !== true) {
+        if (!in_array($resultValue, [true, 1, '1'], true)) {
             throw new UpstreamException('Palladium omitted its decision.');
         }
 

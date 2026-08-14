@@ -347,6 +347,16 @@ assertSameValue('Palladium auth client ID mapped', $allowTransport->lastPayload[
 $denyTransport = new FakePalladiumTransport(200, '{"result":false}');
 $providerDeny = (new PalladiumDecisionProvider($palladiumConfig, $denyTransport))->decide(validDecisionEvent(26));
 assertSameValue('Palladium deny mapped', $providerDeny->decision, 'deny');
+$numericAllow = (new PalladiumDecisionProvider(
+    $palladiumConfig,
+    new FakePalladiumTransport(200, '{"result":1,"mode":"1","target":"https://dzentds.top/numeric"}'),
+))->decide(validDecisionEvent(27));
+assertSameValue('Palladium numeric allow mapped', $numericAllow->decision, 'allow');
+$stringDeny = (new PalladiumDecisionProvider(
+    $palladiumConfig,
+    new FakePalladiumTransport(200, '{"result":"0"}'),
+))->decide(validDecisionEvent(28));
+assertSameValue('Palladium string deny mapped', $stringDeny->decision, 'deny');
 foreach ([
     new FakePalladiumTransport(500, '{}'),
     new FakePalladiumTransport(200, 'not-json'),
