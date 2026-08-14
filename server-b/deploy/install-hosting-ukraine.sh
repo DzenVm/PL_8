@@ -49,9 +49,11 @@ fi
 for required_path in \
   src/TelemetryEndpoint.php \
   bin/palladium-smoke.php \
+  bin/add-site.php \
   bin/prune-logs.php \
   bin/validate-config.php \
   tests/self-test.php \
+  tests/add-site-test.php \
   deploy/hosting-ukraine-index.php \
   deploy/import-legacy-palladium.php \
   deploy/runtime.json
@@ -97,11 +99,14 @@ fi
 
 "$php84" -l "$staging_dir/src/TelemetryEndpoint.php" >/dev/null
 "$php84" -l "$staging_dir/bin/palladium-smoke.php" >/dev/null
+"$php84" -l "$staging_dir/bin/add-site.php" >/dev/null
 "$php84" -l "$staging_dir/bin/prune-logs.php" >/dev/null
 "$php84" -l "$staging_dir/bin/validate-config.php" >/dev/null
+"$php84" -l "$staging_dir/tests/add-site-test.php" >/dev/null
 "$php84" -l "$staging_dir/deploy/hosting-ukraine-index.php" >/dev/null
 "$php84" -l "$staging_dir/deploy/import-legacy-palladium.php" >/dev/null
 "$php84" "$staging_dir/tests/self-test.php"
+"$php84" "$staging_dir/tests/add-site-test.php"
 
 had_app=0
 had_private=0
@@ -187,7 +192,7 @@ rollback() {
       if [ "$had_v4" -eq 0 ]; then rmdir "$web_dir/v4" 2>/dev/null || true; fi
     fi
     if [ "$release_created" -eq 1 ]; then
-      rm -f "$release_dir/src/TelemetryEndpoint.php" "$release_dir/bin/palladium-smoke.php" "$release_dir/bin/prune-logs.php" "$release_dir/bin/validate-config.php"
+      rm -f "$release_dir/src/TelemetryEndpoint.php" "$release_dir/bin/palladium-smoke.php" "$release_dir/bin/add-site.php" "$release_dir/bin/prune-logs.php" "$release_dir/bin/validate-config.php"
       rmdir "$release_dir/src" "$release_dir/bin" "$release_dir" 2>/dev/null || true
     fi
     if [ "$generated_request_key" -eq 1 ]; then rm -f "$private_dir/request-hmac.key"; fi
@@ -222,6 +227,7 @@ install -d -m 0700 "$release_dir" "$release_dir/src" "$release_dir/bin"
 release_created=1
 install -m 0600 "$staging_dir/src/TelemetryEndpoint.php" "$release_dir/src/TelemetryEndpoint.php"
 install -m 0700 "$staging_dir/bin/palladium-smoke.php" "$release_dir/bin/palladium-smoke.php"
+install -m 0700 "$staging_dir/bin/add-site.php" "$release_dir/bin/add-site.php"
 install -m 0700 "$staging_dir/bin/prune-logs.php" "$release_dir/bin/prune-logs.php"
 install -m 0700 "$staging_dir/bin/validate-config.php" "$release_dir/bin/validate-config.php"
 

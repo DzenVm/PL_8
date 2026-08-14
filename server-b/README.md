@@ -93,11 +93,22 @@ All key and Palladium credential files must be regular `0600` files outside the 
 
 Adding a site does not create another Server B endpoint, Palladium copy, or retention task:
 
-1. Generate one request HMAC key for the site.
-2. Add its `site_id`, `key_id`, and key-file path to the shared registry atomically.
-3. Validate the full config with PHP 8.4.
-4. Add the matching server-only values to that site's Vercel project.
+1. Generate one request HMAC key for the site without printing it.
+2. Add the same value as the protected `TDS_SHARED_SECRET` in the site's Vercel project.
+3. Pipe the secret to the CLI-only `bin/add-site.php` command. It creates the private key file, atomically adds its `site_id`/`key_id` registry entry, and validates the staged config before commit:
+
+```sh
+printf '%s\n' "$TDS_SHARED_SECRET" | \
+  TDS_TELEMETRY_CONFIG_FILE=/home/dzenmedv/api.studiadesi.site/private/runtime.json \
+  /usr/local/php84/bin/php \
+  /home/dzenmedv/api.studiadesi.site/app/current/bin/add-site.php \
+  newsite_pl newsite_pl-v1 --secret-stdin
+```
+
+4. Validate the full config with PHP 8.4.
 5. Verify the complete path in Preview before enabling production.
+
+`add-site.php` is CLI-only, rejects duplicate `site_id` or `key_id`, never prints the supplied secret, and does not alter existing client records.
 
 ## Retention
 
@@ -115,6 +126,7 @@ Use the host's explicit PHP 8.4 binary:
 
 ```sh
 /usr/local/php84/bin/php tests/self-test.php
+/usr/local/php84/bin/php tests/add-site-test.php
 TDS_TELEMETRY_CONFIG_FILE=/home/dzenmedv/api.studiadesi.site/private/runtime.json /usr/local/php84/bin/php bin/validate-config.php
 ```
 
