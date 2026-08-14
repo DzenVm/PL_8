@@ -342,7 +342,11 @@ assertSameValue('Palladium allow target mapped', $providerAllow->target, 'https:
 assertSameValue('Palladium payload uses real IP', $allowTransport->lastPayload['server']['REMOTE_ADDR'] ?? null, '203.0.113.10');
 assertSameValue('Palladium payload uses real UA', $allowTransport->lastPayload['server']['HTTP_USER_AGENT'] ?? null, 'Mozilla/5.0 Test Browser');
 assertSameValue('Palladium payload matches GET request collector', $allowTransport->lastPayload['request'] ?? null, []);
-assertSameValue('Palladium payload keeps click ID in query', $allowTransport->lastPayload['server']['QUERY_STRING'] ?? null, 'gclid=raw-click-id-123abc');
+assertSameValue(
+    'Palladium payload keeps click ID in query',
+    $allowTransport->lastPayload['server']['QUERY_STRING'] ?? null,
+    'gclid=raw-click-id-123abc&utm_source=google&utm_campaign=sandbox',
+);
 assertSameValue('Palladium payload has no fabricated client hints', array_key_exists('HTTP_SEC_CH_UA', $allowTransport->lastPayload['server'] ?? []), false);
 assertSameValue('Palladium payload follows official header allowlist', array_key_exists('REQUEST_METHOD', $allowTransport->lastPayload['server'] ?? []), false);
 assertSameValue('Palladium auth client ID mapped', $allowTransport->lastPayload['auth']['clientId'] ?? null, 'client-id');
