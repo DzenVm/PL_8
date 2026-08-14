@@ -859,7 +859,10 @@ final class PalladiumDecisionProvider implements DecisionProvider
         $tracking = $event['tracking'];
         /** @var array<string, string> $client */
         $client = $event['client'];
-        $query = http_build_query($tracking, '', '&', PHP_QUERY_RFC3986);
+        // The official PHP integration receives a normal GET: its POST-only
+        // request/jsrequest collectors are therefore both empty. Tracking
+        // identifiers are represented by the original query string fields.
+        $query = http_build_query($tracking);
         $requestUri = '/' . ($query === '' ? '' : '?' . $query);
 
         $server = [
@@ -886,7 +889,7 @@ final class PalladiumDecisionProvider implements DecisionProvider
         $result = $this->transport->postForm(
             $this->config->url,
             [
-                'request' => $tracking,
+                'request' => [],
                 'jsrequest' => [],
                 'server' => $server,
                 'auth' => [
