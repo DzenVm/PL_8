@@ -1,9 +1,10 @@
 import { NextResponse } from "next/server";
-import type { NextFetchEvent, NextRequest } from "next/server";
+import type { NextRequest } from "next/server";
 import { readTdsConfig } from "./lib/tds/config";
-import { sendTdsEvent } from "./lib/tds/event";
+import { requestTdsDecision } from "./lib/tds/decision";
 import { buildCampaignRedirect } from "./lib/tds/redirect";
 import { extractTrackingParameters } from "./lib/tds/tracking";
+import type { TdsClientContext } from "./lib/tds/types";
 
 function normalSiteResponse(request: NextRequest) {
   const nonce = Buffer.from(crypto.randomUUID()).toString("base64");
@@ -35,7 +36,28 @@ function normalSiteResponse(request: NextRequest) {
   return response;
 }
 
-export function proxy(request: NextRequest, event: NextFetchEvent) {
+function boundedHeader(value: string | null, maxLength: number) {
+  if (!value) return "";
+  const sanitized = value.replace(/[\u0000-\u001f\u007f]/g, "");
+  return Buffer.from(sanitized, "utf8").subarray(0, maxLength).toString("utf8");
+}
+
+function clientContext(request: NextRequest): TdsClientContext {
+  const forwardedIp = request.headers.get("x-vercel-forwarded-for")
+    ?? request.headers.get("x-real-ip")
+    ?? request.headers.get("x-forwarded-for")
+    ?? "";
+  return {
+    ip: forwardedIp.split(",", 1)[0].trim(),
+    host: boundedHeader(request.headers.get("host") ?? request.nextUrl.hostname, 253),
+    user_agent: boundedHeader(request.headers.get("user-agent"), 512) || "unknown",
+    accept: boundedHeader(request.headers.get("accept"), 512),
+    accept_language: boundedHeader(request.headers.get("accept-language"), 256),
+    referer: boundedHeader(request.headers.get("referer"), 1024),
+  };
+}
+
+export async function proxy(request: NextRequest) {
   const isEligibleRequest =
     (request.method === "GET" || request.method === "HEAD") &&
     request.nextUrl.pathname === "/";
@@ -47,40 +69,62 @@ export function proxy(request: NextRequest, event: NextFetchEvent) {
 
   const tdsConfig = readTdsConfig();
   const correlationId = crypto.randomUUID();
-  const destination = buildCampaignRedirect(
-    tdsConfig,
-    tracking,
-    correlationId,
-  );
-
-  if (!destination) {
+  if (
+    !tdsConfig.enabled ||
+    tdsConfig.configurationError ||
+    tdsConfig.decisionConfigurationError
+  ) {
     if (tdsConfig.enabled) {
       console.warn(
         JSON.stringify({
           event: "tds_route_skipped",
           correlation_id: correlationId,
-          error: tdsConfig.configurationError ?? "TARGET_REJECTED",
+          error:
+            tdsConfig.configurationError
+            ?? tdsConfig.decisionConfigurationError
+            ?? "CONFIGURATION_INVALID",
         }),
       );
     }
     return normalSiteResponse(request);
   }
 
-  if (
-    tdsConfig.eventUrl &&
-    tdsConfig.sharedSecret &&
-    tdsConfig.keyId &&
-    tdsConfig.siteId
-  ) {
-    event.waitUntil(sendTdsEvent(tdsConfig, tracking, correlationId));
-  } else if (tdsConfig.eventConfigurationError) {
+  const decision = await requestTdsDecision(
+    tdsConfig,
+    tracking,
+    clientContext(request),
+    correlationId,
+  );
+  if (decision.kind === "deny") {
+    const response = normalSiteResponse(request);
+    response.headers.set("X-Correlation-ID", correlationId);
+    return response;
+  }
+
+  let target = decision.kind === "allow" ? decision.target : null;
+  if (decision.kind === "error") {
     console.warn(
       JSON.stringify({
-        event: "tds_event_disabled",
+        event: "tds_decision_failed",
         correlation_id: correlationId,
-        error: tdsConfig.eventConfigurationError,
+        error: decision.reason,
       }),
     );
+    if (tdsConfig.errorFallback === "target") {
+      target = tdsConfig.targetUrl;
+    }
+  }
+
+  const destination = buildCampaignRedirect(
+    tdsConfig,
+    tracking,
+    correlationId,
+    target,
+  );
+  if (!destination) {
+    const response = normalSiteResponse(request);
+    response.headers.set("X-Correlation-ID", correlationId);
+    return response;
   }
 
   const response = NextResponse.redirect(destination, 307);

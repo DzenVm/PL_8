@@ -1,0 +1,30 @@
+{
+  "clients": [
+    {
+      "site_id": "PL_8",
+      "key_id": "pl8-v1",
+      "hmac_secret_file": "/absolute/path/outside/webroot/clients/pl8-v1.key"
+    },
+    {
+      "site_id": "PL_9",
+      "key_id": "pl9-v1",
+      "hmac_secret_file": "/absolute/path/outside/webroot/clients/pl9-v1.key"
+    }
+  ],
+  "endpoint_url": "https://events.example.test/v4/index.php",
+  "nonce_store_dir": "/absolute/path/outside/webroot/tds-nonces",
+  "event_log_dir": "/absolute/path/outside/webroot/tds-events",
+  "log_hmac_key_file": "/absolute/path/outside/webroot/tds-log-hmac-key",
+  "log_retention_days": 30,
+  "max_clock_skew_seconds": 60,
+  "max_body_bytes": 4096,
+  "palladium": {
+    "url": "https://rbl.palladium.expert",
+    "client_id_file": "/absolute/path/outside/webroot/palladium-client-id",
+    "client_company_file": "/absolute/path/outside/webroot/palladium-client-company",
+    "client_secret_file": "/absolute/path/outside/webroot/palladium-client-secret",
+    "allowed_target_hosts": ["tracker.example"],
+    "connect_timeout_ms": 350,
+    "timeout_ms": 800
+  }
+}

@@ -10,18 +10,19 @@ export function buildCampaignRedirect(
   config: TdsConfig,
   tracking: TrackingParameters,
   correlationId: string,
+  targetUrl: string | null = config.targetUrl,
 ): URL | null {
   if (
     !config.enabled ||
     config.configurationError ||
-    !config.targetUrl ||
+    !targetUrl ||
     !config.allowedTargetHosts.size
   ) {
     return null;
   }
 
   try {
-    const target = new URL(config.targetUrl);
+    const target = new URL(targetUrl);
     const normalizedHost = target.hostname.toLowerCase();
     if (
       target.protocol !== "https:" ||

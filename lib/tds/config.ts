@@ -1,8 +1,8 @@
 import type { TdsConfig } from "./types";
 
-const DEFAULT_TIMEOUT_MS = 900;
-const MIN_TIMEOUT_MS = 100;
-const MAX_TIMEOUT_MS = 2_000;
+const DEFAULT_TIMEOUT_MS = 1_200;
+const MIN_TIMEOUT_MS = 500;
+const MAX_TIMEOUT_MS = 2_500;
 const PL8_CORRELATION_PARAMETER = "sub_id_6";
 const keyIdPattern = /^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$/;
 const siteIdPattern = /^[A-Za-z0-9][A-Za-z0-9_-]{0,63}$/;
@@ -48,7 +48,7 @@ export function readTdsConfig(
   const targetUrl = normalizedUrl(environment.TDS_TARGET_URL, {
     allowSearch: true,
   });
-  const configuredEventUrl = normalizedUrl(environment.TDS_EVENT_URL, {
+  const configuredDecisionUrl = normalizedUrl(environment.TDS_DECISION_URL, {
     allowSearch: false,
   });
   const allowedTargetHosts = new Set(
@@ -63,38 +63,46 @@ export function readTdsConfig(
   const configuredSharedSecret = rawSharedSecret === "" ? null : rawSharedSecret ?? null;
   const keyId = environment.TDS_KEY_ID || null;
   const siteId = environment.TDS_SITE_ID || null;
+  const errorFallback = environment.TDS_ERROR_FALLBACK === "site" ? "site" : "target";
 
   let configurationError: string | null = null;
   if (enabled && !targetUrl) configurationError = "TARGET_URL_INVALID";
   else if (enabled && allowedTargetHosts.size === 0)
     configurationError = "TARGET_ALLOWLIST_EMPTY";
+  else if (
+    enabled
+    && targetUrl
+    && !allowedTargetHosts.has(new URL(targetUrl).hostname.toLowerCase())
+  ) configurationError = "TARGET_URL_NOT_ALLOWED";
   else if (correlationParameter !== PL8_CORRELATION_PARAMETER)
     configurationError = "CORRELATION_PARAMETER_INVALID";
-  let eventConfigurationError: string | null = null;
-  const eventConfigurationStarted = Boolean(
-    environment.TDS_EVENT_URL || configuredSharedSecret || keyId || siteId,
+  let decisionConfigurationError: string | null = null;
+  const decisionConfigurationStarted = Boolean(
+    environment.TDS_DECISION_URL || configuredSharedSecret || keyId || siteId,
   );
-  if (environment.TDS_EVENT_URL && !configuredEventUrl) {
-    eventConfigurationError = "EVENT_URL_INVALID";
+  if (environment.TDS_DECISION_URL && !configuredDecisionUrl) {
+    decisionConfigurationError = "DECISION_URL_INVALID";
   } else if (
     configuredSharedSecret &&
     (utf8ByteLength(configuredSharedSecret) < 32 ||
       utf8ByteLength(configuredSharedSecret) > 4_096)
   ) {
-    eventConfigurationError = "EVENT_SECRET_INVALID";
+    decisionConfigurationError = "DECISION_SECRET_INVALID";
   } else if (keyId && !keyIdPattern.test(keyId)) {
-    eventConfigurationError = "EVENT_KEY_ID_INVALID";
+    decisionConfigurationError = "DECISION_KEY_ID_INVALID";
   } else if (siteId && !siteIdPattern.test(siteId)) {
-    eventConfigurationError = "EVENT_SITE_ID_INVALID";
+    decisionConfigurationError = "DECISION_SITE_ID_INVALID";
   } else if (
-    eventConfigurationStarted &&
-    (!configuredEventUrl || !configuredSharedSecret || !keyId || !siteId)
+    decisionConfigurationStarted &&
+    (!configuredDecisionUrl || !configuredSharedSecret || !keyId || !siteId)
   ) {
-    eventConfigurationError = "EVENT_AUTH_INCOMPLETE";
+    decisionConfigurationError = "DECISION_AUTH_INCOMPLETE";
+  } else if (enabled && !decisionConfigurationStarted) {
+    decisionConfigurationError = "DECISION_AUTH_REQUIRED";
   }
 
-  const eventUrl = eventConfigurationError ? null : configuredEventUrl;
-  const sharedSecret = eventConfigurationError
+  const decisionUrl = decisionConfigurationError ? null : configuredDecisionUrl;
+  const sharedSecret = decisionConfigurationError
     ? null
     : configuredSharedSecret;
 
@@ -103,12 +111,13 @@ export function readTdsConfig(
     targetUrl,
     allowedTargetHosts,
     correlationParameter,
-    eventUrl,
+    decisionUrl,
     sharedSecret,
-    keyId: eventConfigurationError ? null : keyId,
-    siteId: eventConfigurationError ? null : siteId,
+    keyId: decisionConfigurationError ? null : keyId,
+    siteId: decisionConfigurationError ? null : siteId,
     timeoutMs: parseTimeout(environment.TDS_TIMEOUT_MS),
+    errorFallback,
     configurationError,
-    eventConfigurationError,
+    decisionConfigurationError,
   };
 }

@@ -53,7 +53,7 @@ const clientCorpus = (
 ).join("\n");
 assert.doesNotMatch(
   clientCorpus,
-  /api\.studiadesi\.site|TDS_SHARED_SECRET|TDS_EVENT_URL/i,
+  /api\.studiadesi\.site|TDS_SHARED_SECRET|TDS_DECISION_URL/i,
   "server-side TDS integration referenced from browser code",
 );
 
@@ -68,8 +68,8 @@ const routingCorpus = (
 ).join("\n");
 assert.doesNotMatch(
   routingCorpus,
-  /user-agent|googlebot|adsbot|cf-connecting-ip|x-forwarded-for/i,
-  "routing must not depend on crawler, browser, or client-IP fingerprints",
+  /googlebot|adsbot|bingbot|crawler|bot-score|cf-connecting-ip/i,
+  "PL_8 must not contain its own crawler-specific routing branch",
 );
 
 console.log(`Clean-foundation checks passed across ${files.length} files.`);

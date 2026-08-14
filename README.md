@@ -35,7 +35,7 @@ npm run start
 - Domena produkcyjna sandboxu: `studiadesi.site`. Jedynym źródłem adresu jest `lib/site.ts`.
 - Funkcje Vercel są uruchamiane w regionie `fra1` (Frankfurt), bliżej ruchu z Polski i Turcji oraz europejskiego Server B.
 - Repozytorium nie zawiera klienta `probe`, publicznych tokenów ani bezpośrednich wywołań `api.studiadesi.site` z przeglądarki.
-- Zwykła strona pozostaje bezpiecznym zachowaniem domyślnym przy błędzie konfiguracji PL_8. Opcjonalna telemetria Server B nie blokuje przekierowania. Awaria zewnętrznego celu po opuszczeniu PL_8 pozostaje osobnym ryzykiem i wymaga monitorowania.
+- Zwykła strona pozostaje bezpiecznym zachowaniem domyślnym przy błędzie konfiguracji PL_8. Routing reklamowy jest włączany dopiero po kompletnej konfiguracji podpisanego endpointu decyzyjnego Server B.
 
 ## Server-side routing wejść reklamowych
 
@@ -43,13 +43,15 @@ Routing jest wykonywany wyłącznie w `proxy.ts`; przeglądarka nie pobiera skry
 
 - mechanizm uruchamia się tylko dla `GET` lub `HEAD` na `/`, gdy URL zawiera jeden poprawny `gclid`, `gbraid` lub `wbraid`;
 - same parametry `utm_*` nie uruchamiają routingu;
-- cel jest stałym adresem HTTPS z konfiguracji serwera i musi pasować do ścisłej listy dozwolonych hostów;
+- Vercel wysyła jeden podpisany request do Server B, a Server B wykonuje synchroniczne server-to-server zapytanie do Palladium;
+- `allow` Palladium może zwrócić HTTPS target tylko z dokładnej listy dozwolonych hostów; `deny` pokazuje zwykłą stronę;
 - do celu są przekazywane tylko dozwolone identyfikatory reklamy i UTM; dowolne `redirect`, `url`, `destination` i przesłane przez klienta `sub_id_6` są ignorowane;
 - `sub_id_6` jest zawsze nadpisywany losowym `correlation_id`;
-- opcjonalne zdarzenie do wspólnego endpointu Server B jest podpisywane kluczem przypisanym wyłącznie do `TDS_SITE_ID=PL_8` i wykonywane w tle. Awaria lub timeout zdarzenia nie zatrzymuje przekierowania;
-- User-Agent, IP, geolokalizacja, nazwa crawlera i bot-score nie są wejściem do decyzji. Ten sam URL ma ten sam typ odpowiedzi niezależnie od klienta.
+- request do wspólnego endpointu Server B jest podpisywany kluczem przypisanym wyłącznie do `TDS_SITE_ID=PL_8`; replay, zły podpis i inny `site_id` są odrzucane;
+- do Palladium przekazywane są prawdziwy publiczny IP z `x-vercel-forwarded-for`, User-Agent i podstawowe nagłówki żądania. PL_8 nie podmienia ich i nie zawiera własnej reguły Googlebot/AdsBot;
+- `TDS_ERROR_FALLBACK=target` zachowuje płatny ruch przy technicznym timeout/5xx, ale taki awaryjny click omija werdykt Palladium i jest logowany jako błąd. Wartość `site` nigdy nie omija Palladium, lecz pokazuje zwykłą stronę podczas awarii.
 
-Ten etap nie wywołuje Palladium i nie używa jego werdyktu do routingu. Realizuje stałe przekierowanie do skonfigurowanego adresu kampanii Keitaro oraz opcjonalną telemetrię Server B.
+Endpoint i sekret Palladium istnieją wyłącznie na Server B. Przeglądarka i bundle Vercel nie otrzymują tych danych. Własne logi Server B nie zapisują surowego IP ani User-Agent, ale te dane są przetwarzane przez Palladium w celu wydania decyzji.
 
 Zmienne środowiskowe są opisane w `.env.example`. `TDS_SHARED_SECRET` należy ustawiać wyłącznie jako chronioną zmienną Vercel, bez prefiksu `NEXT_PUBLIC_`. Wspólny endpoint obsługuje wiele stron, ale każda strona ma własne `TDS_SITE_ID`, `TDS_KEY_ID` i sekret; skopiowanie sekretu między projektami jest zabronione.
 
@@ -65,13 +67,13 @@ npm run test:foundation
 TDS_ENABLED=true \
 TDS_TARGET_URL=https://tracker.example/campaign \
 TDS_ALLOWED_TARGET_HOSTS=tracker.example \
-TDS_EVENT_URL=https://events.example/v4/index.php \
+TDS_DECISION_URL=https://events.example/v4/index.php \
 TDS_SHARED_SECRET=unique-client-bundle-test-marker \
 TDS_KEY_ID=pl8-test-v1 \
 TDS_SITE_ID=PL_8 \
 npm run build
 TDS_TARGET_URL=https://tracker.example/campaign \
-TDS_EVENT_URL=https://events.example/v4/index.php \
+TDS_DECISION_URL=https://events.example/v4/index.php \
 TDS_SHARED_SECRET=unique-client-bundle-test-marker \
 TDS_KEY_ID=pl8-test-v1 \
 TDS_SITE_ID=PL_8 \

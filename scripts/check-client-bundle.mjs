@@ -6,7 +6,7 @@ const root = process.cwd();
 const staticDirectory = path.join(root, ".next", "static");
 const markers = [
   process.env.TDS_SHARED_SECRET,
-  process.env.TDS_EVENT_URL,
+  process.env.TDS_DECISION_URL,
   process.env.TDS_TARGET_URL,
 ].filter(Boolean);
 

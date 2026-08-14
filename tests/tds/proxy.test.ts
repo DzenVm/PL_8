@@ -7,48 +7,71 @@ const baseEnvironment = {
   TDS_TARGET_URL: "https://tracker.example/campaign?fixed=value",
   TDS_ALLOWED_TARGET_HOSTS: "tracker.example",
   TDS_CORRELATION_PARAM: "sub_id_6",
+  TDS_DECISION_URL: "https://events.example/v4/index.php",
+  TDS_SHARED_SECRET: "s".repeat(32),
+  TDS_KEY_ID: "pl8-v1",
+  TDS_SITE_ID: "PL_8",
+  TDS_TIMEOUT_MS: "1200",
+  TDS_ERROR_FALLBACK: "target",
 };
 
 function applyEnvironment(overrides: Record<string, string> = {}) {
-  for (const [name, value] of Object.entries({
-    ...baseEnvironment,
-    ...overrides,
-  })) {
+  for (const [name, value] of Object.entries({ ...baseEnvironment, ...overrides })) {
     vi.stubEnv(name, value);
   }
 }
 
-function runProxy(
+function decisionResponse(decision: "allow" | "deny" = "allow") {
+  return vi.fn(async (_url: URL, init: RequestInit) => {
+    const request = JSON.parse(String(init.body));
+    return new Response(JSON.stringify({
+      schema_version: 1,
+      decision,
+      correlation_id: request.correlation_id,
+      ...(decision === "allow" ? { target: "https://tracker.example/from-palladium" } : {}),
+      reason: decision === "allow" ? "palladium_allowed" : "palladium_denied",
+      latency_ms: 25,
+    }), { status: 200 });
+  });
+}
+
+async function runProxy(
   url: string,
   userAgent = "Test Browser",
   method: "GET" | "HEAD" | "POST" = "GET",
 ) {
-  const waitUntil = vi.fn();
-  const response = proxy(
-    new NextRequest(url, { headers: { "user-agent": userAgent }, method }),
-    { waitUntil } as never,
-  );
-  return { response, waitUntil };
+  return proxy(new NextRequest(url, {
+    headers: {
+      "user-agent": userAgent,
+      "x-vercel-forwarded-for": "203.0.113.10",
+      "accept-language": "tr-TR",
+    },
+    method,
+  }));
 }
 
 afterEach(() => {
   vi.unstubAllEnvs();
+  vi.unstubAllGlobals();
+  vi.restoreAllMocks();
 });
 
 describe("proxy routing", () => {
   it.each(["gclid", "gbraid", "wbraid"])(
-    "redirects a root request with %s",
-    (name) => {
+    "redirects a root request with %s only after Palladium allow",
+    async (name) => {
       applyEnvironment();
-      const { response } = runProxy(`https://studiadesi.site/?${name}=123abc`);
+      const fetchMock = decisionResponse("allow");
+      vi.stubGlobal("fetch", fetchMock);
+      const response = await runProxy(`https://studiadesi.site/?${name}=123abc`);
       const destination = new URL(response.headers.get("location") ?? "");
 
       expect(response.status).toBe(307);
+      expect(destination.pathname).toBe("/from-palladium");
       expect(destination.searchParams.get(name)).toBe("123abc");
-      expect(destination.searchParams.get("sub_id_6")).toMatch(
-        /^[0-9a-f-]{36}$/,
-      );
+      expect(destination.searchParams.get("sub_id_6")).toMatch(/^[0-9a-f-]{36}$/);
       expect(response.headers.get("cache-control")).toContain("no-store");
+      expect(fetchMock).toHaveBeenCalledTimes(1);
     },
   );
 
@@ -57,125 +80,101 @@ describe("proxy routing", () => {
     "https://studiadesi.site/?utm_source=google",
     "https://studiadesi.site/kontakt?gclid=123abc",
     "https://studiadesi.site/?gclid=",
-  ])("serves the ordinary site without an eligible ad identifier: %s", (url) => {
+  ])("serves the ordinary site without an eligible ad identifier: %s", async (url) => {
     applyEnvironment();
-    const { response, waitUntil } = runProxy(url);
+    const fetchMock = vi.fn();
+    vi.stubGlobal("fetch", fetchMock);
+    const response = await runProxy(url);
     expect(response.status).toBe(200);
     expect(response.headers.get("location")).toBeNull();
-    expect(waitUntil).not.toHaveBeenCalled();
+    expect(fetchMock).not.toHaveBeenCalled();
   });
 
-  it("does not make routing depend on User-Agent", () => {
+  it("serves the ordinary site after Palladium deny", async () => {
     applyEnvironment();
-    const chrome = runProxy(
-      "https://studiadesi.site/?gclid=123abc",
-      "Mozilla/5.0 Chrome/140",
-    ).response;
-    const crawler = runProxy(
-      "https://studiadesi.site/?gclid=123abc",
-      "AdsBot-Google",
-    ).response;
+    vi.stubGlobal("fetch", decisionResponse("deny"));
+    const response = await runProxy("https://studiadesi.site/?gclid=123abc");
+    expect(response.status).toBe(200);
+    expect(response.headers.get("location")).toBeNull();
+    expect(response.headers.get("x-correlation-id")).toMatch(/^[0-9a-f-]{36}$/);
+  });
+
+  it("preserves paid traffic on a technical error when fallback is target", async () => {
+    applyEnvironment({ TDS_ERROR_FALLBACK: "target" });
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue(new Response("{}", { status: 502 })));
+    vi.spyOn(console, "warn").mockImplementation(() => undefined);
+    const response = await runProxy("https://studiadesi.site/?gclid=123abc");
+    const destination = new URL(response.headers.get("location") ?? "");
+    expect(response.status).toBe(307);
+    expect(destination.pathname).toBe("/campaign");
+  });
+
+  it("never bypasses Palladium on a technical error when fallback is site", async () => {
+    applyEnvironment({ TDS_ERROR_FALLBACK: "site" });
+    vi.stubGlobal("fetch", vi.fn().mockRejectedValue(new TypeError("network")));
+    vi.spyOn(console, "warn").mockImplementation(() => undefined);
+    const response = await runProxy("https://studiadesi.site/?gclid=123abc");
+    expect(response.status).toBe(200);
+    expect(response.headers.get("location")).toBeNull();
+  });
+
+  it("forwards Vercel's anti-spoofed client IP and the authentic User-Agent", async () => {
+    applyEnvironment();
+    const fetchMock = decisionResponse("allow");
+    vi.stubGlobal("fetch", fetchMock);
+    await runProxy("https://studiadesi.site/?gclid=123abc", "AdsBot-Google");
+    const request = JSON.parse(String(fetchMock.mock.calls[0][1]?.body));
+    expect(request.client.ip).toBe("203.0.113.10");
+    expect(request.client.user_agent).toBe("AdsBot-Google");
+  });
+
+  it("does not make its own decision depend on User-Agent", async () => {
+    applyEnvironment();
+    vi.stubGlobal("fetch", decisionResponse("allow"));
+    const chrome = await runProxy("https://studiadesi.site/?gclid=123abc", "Mozilla/5.0 Chrome/140");
+    const crawler = await runProxy("https://studiadesi.site/?gclid=123abc", "AdsBot-Google");
     const chromeDestination = new URL(chrome.headers.get("location") ?? "");
     const crawlerDestination = new URL(crawler.headers.get("location") ?? "");
     chromeDestination.searchParams.delete("sub_id_6");
     crawlerDestination.searchParams.delete("sub_id_6");
-
     expect(chrome.status).toBe(crawler.status);
     expect(chromeDestination.toString()).toBe(crawlerDestination.toString());
   });
 
-  it("routes even if optional telemetry is not configured", () => {
+  it("fails to the ordinary site when decision authentication is incomplete", async () => {
+    applyEnvironment({ TDS_SHARED_SECRET: "too-short" });
+    const fetchMock = vi.fn();
+    vi.stubGlobal("fetch", fetchMock);
+    vi.spyOn(console, "warn").mockImplementation(() => undefined);
+    const response = await runProxy("https://studiadesi.site/?gclid=123abc");
+    expect(response.status).toBe(200);
+    expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  it("keeps GET and HEAD routing consistent", async () => {
     applyEnvironment();
-    const { response, waitUntil } = runProxy(
-      "https://studiadesi.site/?gclid=123abc",
-    );
-    expect(response.status).toBe(307);
-    expect(waitUntil).not.toHaveBeenCalled();
-  });
-
-  it("routes when optional telemetry is only half configured", () => {
-    applyEnvironment({ TDS_SHARED_SECRET: "configured-without-url" });
-    const { response, waitUntil } = runProxy(
-      "https://studiadesi.site/?gclid=123abc",
-    );
-    expect(response.status).toBe(307);
-    expect(waitUntil).not.toHaveBeenCalled();
-  });
-
-  it("schedules one telemetry event without delaying the redirect", () => {
-    applyEnvironment({
-      TDS_EVENT_URL: "https://events.example/v4/index.php",
-      TDS_SHARED_SECRET: "s".repeat(32),
-      TDS_KEY_ID: "pl8-v1",
-      TDS_SITE_ID: "PL_8",
-    });
-    const { response, waitUntil } = runProxy(
-      "https://studiadesi.site/?gclid=123abc",
-    );
-    expect(response.status).toBe(307);
-    expect(waitUntil).toHaveBeenCalledTimes(1);
-    expect(waitUntil.mock.calls[0][0]).toBeInstanceOf(Promise);
-  });
-
-  it.each<Record<string, string>>([
-    {
-      TDS_SHARED_SECRET: "too-short",
-      TDS_EVENT_URL: "https://events.example/v4/index.php",
-    },
-    {
-      TDS_SHARED_SECRET: "s".repeat(32),
-      TDS_EVENT_URL: "https://events.example/v4/index.php",
-      TDS_KEY_ID: "bad key",
-      TDS_SITE_ID: "PL_8",
-    },
-    {
-      TDS_SHARED_SECRET: "s".repeat(32),
-      TDS_EVENT_URL: "https://events.example/v4/index.php",
-      TDS_KEY_ID: "pl8-v1",
-      TDS_SITE_ID: "bad site id",
-    },
-  ])("keeps routing when telemetry credentials are invalid: %o", (overrides) => {
-    applyEnvironment(overrides);
-    const { response, waitUntil } = runProxy(
-      "https://studiadesi.site/?gclid=123abc",
-    );
-    expect(response.status).toBe(307);
-    expect(waitUntil).not.toHaveBeenCalled();
-  });
-
-  it("keeps GET and HEAD routing consistent", () => {
-    applyEnvironment();
-    const getResponse = runProxy(
-      "https://studiadesi.site/?gclid=123abc",
-      "Test Browser",
-      "GET",
-    ).response;
-    const headResponse = runProxy(
-      "https://studiadesi.site/?gclid=123abc",
-      "Test Browser",
-      "HEAD",
-    ).response;
+    vi.stubGlobal("fetch", decisionResponse("allow"));
+    const getResponse = await runProxy("https://studiadesi.site/?gclid=123abc", "Test Browser", "GET");
+    const headResponse = await runProxy("https://studiadesi.site/?gclid=123abc", "Test Browser", "HEAD");
     expect(getResponse.status).toBe(307);
     expect(headResponse.status).toBe(307);
   });
 
-  it("does not route POST requests", () => {
+  it("does not route POST requests", async () => {
     applyEnvironment();
-    const { response } = runProxy(
-      "https://studiadesi.site/?gclid=123abc",
-      "Test Browser",
-      "POST",
-    );
+    const response = await runProxy("https://studiadesi.site/?gclid=123abc", "Test Browser", "POST");
     expect(response.status).toBe(200);
     expect(response.headers.get("location")).toBeNull();
   });
 
-  it("fails to the normal site when the fixed target is invalid", () => {
+  it("fails to the normal site when the fixed target is invalid", async () => {
     applyEnvironment({ TDS_TARGET_URL: "https://foreign.example/campaign" });
-    const { response } = runProxy(
-      "https://studiadesi.site/?gclid=123abc",
-    );
+    const fetchMock = vi.fn();
+    vi.stubGlobal("fetch", fetchMock);
+    vi.spyOn(console, "warn").mockImplementation(() => undefined);
+    const response = await runProxy("https://studiadesi.site/?gclid=123abc");
     expect(response.status).toBe(200);
     expect(response.headers.get("location")).toBeNull();
+    expect(fetchMock).not.toHaveBeenCalled();
   });
 });

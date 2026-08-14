@@ -66,11 +66,13 @@ export default function PrivacyPolicyPage() {
           </p>
           <p>
             Odbiorcami danych mogą być dostawcy hostingu i CDN, operator
-            serwera pomiarowego oraz operator zadeklarowanego systemu kampanii
-            pod domeną <code>dzentds.top</code>. Po przekierowaniu system
-            docelowy otrzymuje również standardowe dane połączenia HTTP, takie
-            jak adres IP i User-Agent. PL_8 nie wykorzystuje ich do wyboru
-            trasy.
+            serwera pomiarowego, Palladium jako system weryfikacji wejścia oraz
+            operator zadeklarowanego systemu kampanii pod domeną{
+            " "}<code>dzentds.top</code>. Palladium otrzymuje identyfikatory i
+            parametry kampanii oraz standardowy kontekst żądania, w tym adres
+            IP, User-Agent, język, stronę odsyłającą i nazwę hosta, aby zwrócić
+            decyzję dla danego wejścia. Po przekierowaniu system docelowy
+            otrzymuje również standardowe dane połączenia HTTP.
           </p>
           <p>
             Własny dziennik zdarzeń PL_8 nie przechowuje surowego identyfikatora
