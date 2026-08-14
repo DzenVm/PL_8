@@ -119,3 +119,5 @@ TDS_TELEMETRY_CONFIG_FILE=/home/dzenmedv/api.studiadesi.site/private/runtime.jso
 ```
 
 Deploy code as a versioned release outside `/www`; only `www/v4/index.php` is public. Update credential files and `runtime.json` by atomic replacement. Then verify a signed request returns a 200 decision, a replay returns 409, an unsigned request returns 401, and Palladium records the same controlled click.
+
+For the one-time PL_8 migration only, `deploy/import-legacy-palladium.php` can read the three Palladium constants from the retired PHP implementation and atomically install them as private `0600` files. It never prints their values. Remove the temporary legacy source immediately after a successful import.

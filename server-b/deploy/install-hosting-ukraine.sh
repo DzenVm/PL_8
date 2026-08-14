@@ -52,6 +52,7 @@ for required_path in \
   bin/validate-config.php \
   tests/self-test.php \
   deploy/hosting-ukraine-index.php \
+  deploy/import-legacy-palladium.php \
   deploy/runtime.json
 do
   required_file=$staging_dir/$required_path
@@ -97,6 +98,7 @@ fi
 "$php84" -l "$staging_dir/bin/prune-logs.php" >/dev/null
 "$php84" -l "$staging_dir/bin/validate-config.php" >/dev/null
 "$php84" -l "$staging_dir/deploy/hosting-ukraine-index.php" >/dev/null
+"$php84" -l "$staging_dir/deploy/import-legacy-palladium.php" >/dev/null
 "$php84" "$staging_dir/tests/self-test.php"
 
 had_app=0
