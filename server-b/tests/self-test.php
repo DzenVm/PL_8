@@ -366,7 +366,7 @@ assertSameValue(
     $allowTransport->lastPayload['server']['QUERY_STRING'] ?? null,
     'gclid=raw-click-id-123abc&utm_source=google&utm_campaign=sandbox',
 );
-assertSameValue('Palladium payload has no fabricated client hints', array_key_exists('HTTP_SEC_CH_UA', $allowTransport->lastPayload['server'] ?? []), false);
+assertSameValue('Palladium payload forwards truthful client hints', array_key_exists('HTTP_SEC_CH_UA', $allowTransport->lastPayload['server'] ?? []), true);
 assertSameValue('Palladium payload follows official header allowlist', array_key_exists('REQUEST_METHOD', $allowTransport->lastPayload['server'] ?? []), false);
 assertSameValue('Palladium auth client ID mapped', $allowTransport->lastPayload['auth']['clientId'] ?? null, 'client-id');
 assertSameValue(
