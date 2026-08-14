@@ -808,7 +808,10 @@ final class CurlPalladiumTransport implements PalladiumTransport
             $body = curl_exec($curl);
             $status = (int) curl_getinfo($curl, CURLINFO_HTTP_CODE);
             if (!is_string($body)) {
-                throw new UpstreamException('The Palladium request failed.');
+                throw new UpstreamException(sprintf(
+                    'The Palladium request failed (curl_error_%d).',
+                    curl_errno($curl),
+                ));
             }
             if (strlen($body) > 65536) {
                 throw new UpstreamException('The Palladium response is too large.');
