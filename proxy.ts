@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { isIP } from "node:net";
 import { readTdsConfig } from "./lib/tds/config";
 import { requestTdsDecision } from "./lib/tds/decision";
 import { buildCampaignRedirect } from "./lib/tds/redirect";
@@ -63,11 +64,31 @@ const palladiumHeaderNames = [
   "x-requested-with",
 ] as const;
 
-function clientContext(request: NextRequest): TdsClientContext {
-  const forwardedIp = request.headers.get("x-vercel-forwarded-for")
-    ?? request.headers.get("x-real-ip")
-    ?? request.headers.get("x-forwarded-for")
-    ?? "";
+function firstValidIp(...values: Array<string | null>) {
+  for (const value of values) {
+    const candidate = value?.split(",", 1)[0].trim() ?? "";
+    if (candidate !== "" && isIP(candidate) !== 0) return candidate;
+  }
+  return "";
+}
+
+function clientContext(
+  request: NextRequest,
+  cloudflareProxyToken: string | null,
+): TdsClientContext {
+  const vercelIp = firstValidIp(
+    request.headers.get("x-vercel-forwarded-for"),
+    request.headers.get("x-real-ip"),
+    request.headers.get("x-forwarded-for"),
+  );
+  const cloudflareMarker = request.headers.get("x-pl8-cf-verified");
+  const cloudflareIp = firstValidIp(request.headers.get("cf-connecting-ip"));
+  const forwardedIp =
+    cloudflareProxyToken !== null
+    && cloudflareMarker === cloudflareProxyToken
+    && cloudflareIp !== ""
+      ? cloudflareIp
+      : vercelIp;
   const headers = Object.fromEntries(
     Array.from(request.headers.entries()).flatMap(([name, rawValue]) => {
       const isAllowed =
@@ -125,7 +146,7 @@ export async function proxy(request: NextRequest) {
   const decision = await requestTdsDecision(
     tdsConfig,
     tracking,
-    clientContext(request),
+    clientContext(request, tdsConfig.cloudflareProxyToken),
     correlationId,
   );
   console.info(

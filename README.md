@@ -48,7 +48,7 @@ Routing jest wykonywany wyłącznie w `proxy.ts`; przeglądarka nie pobiera skry
 - do celu są przekazywane tylko dozwolone identyfikatory reklamy i UTM; dowolne `redirect`, `url`, `destination` i przesłane przez klienta `sub_id_6` są ignorowane;
 - `sub_id_6` jest zawsze nadpisywany losowym `correlation_id`;
 - request do wspólnego endpointu Server B jest podpisywany kluczem przypisanym wyłącznie do `TDS_SITE_ID=PL_8`; replay, zły podpis i inny `site_id` są odrzucane;
-- do Palladium przekazywane są prawdziwy publiczny IP z `x-vercel-forwarded-for`, User-Agent i podstawowe nagłówki żądania. PL_8 nie podmienia ich i nie zawiera własnej reguły Googlebot/AdsBot;
+- do Palladium przekazywane są prawdziwy publiczny IP, User-Agent i podstawowe nagłówki żądania. Jeśli Cloudflare ustawi podpisany `X-PL8-CF-Verified`, używany jest jego `CF-Connecting-IP`; bez tego markera PL_8 bezpiecznie korzysta z Vercelowego IP. PL_8 nie podmienia browser fingerprintu i nie zawiera własnej reguły Googlebot/AdsBot;
 - `TDS_ERROR_FALLBACK=target` zachowuje płatny ruch przy technicznym timeout/5xx, ale taki awaryjny click omija werdykt Palladium i jest logowany jako błąd. Wartość `site` nigdy nie omija Palladium, lecz pokazuje zwykłą stronę podczas awarii.
 
 Endpoint i sekret Palladium istnieją wyłącznie na Server B. Przeglądarka i bundle Vercel nie otrzymują tych danych. Własne logi Server B nie zapisują surowego IP ani User-Agent, ale te dane są przetwarzane przez Palladium w celu wydania decyzji.

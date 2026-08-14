@@ -39,6 +39,7 @@ async function runProxy(
   url: string,
   userAgent = "Test Browser",
   method: "GET" | "HEAD" | "POST" = "GET",
+  extraHeaders: Record<string, string> = {},
 ) {
   return proxy(new NextRequest(url, {
     headers: {
@@ -56,6 +57,7 @@ async function runProxy(
       "sec-fetch-site": "none",
       "upgrade-insecure-requests": "1",
       cookie: "consent=accepted",
+      ...extraHeaders,
     },
     method,
   }));
@@ -154,6 +156,37 @@ describe("proxy routing", () => {
       "sec-ch-ua-full-version-list": '"Chromium";v="140.0.7339.0"',
       cookie: "consent=accepted",
     });
+  });
+
+  it("uses Cloudflare's client IP only with the verified proxy marker", async () => {
+    applyEnvironment({ TDS_CF_PROXY_TOKEN: "cf-proxy-secret" });
+    const fetchMock = decisionResponse("allow");
+    vi.stubGlobal("fetch", fetchMock);
+    await runProxy(
+      "https://studiadesi.site/?gclid=123abc",
+      "Test Browser",
+      "GET",
+      {
+        "cf-connecting-ip": "188.125.171.218",
+        "x-pl8-cf-verified": "cf-proxy-secret",
+      },
+    );
+    const request = JSON.parse(String(fetchMock.mock.calls[0][1]?.body));
+    expect(request.client.ip).toBe("188.125.171.218");
+  });
+
+  it("does not trust an unverified Cloudflare client IP", async () => {
+    applyEnvironment({ TDS_CF_PROXY_TOKEN: "cf-proxy-secret" });
+    const fetchMock = decisionResponse("allow");
+    vi.stubGlobal("fetch", fetchMock);
+    await runProxy(
+      "https://studiadesi.site/?gclid=123abc",
+      "Test Browser",
+      "GET",
+      { "cf-connecting-ip": "188.125.171.218" },
+    );
+    const request = JSON.parse(String(fetchMock.mock.calls[0][1]?.body));
+    expect(request.client.ip).toBe("203.0.113.10");
   });
 
   it("does not make its own decision depend on User-Agent", async () => {

@@ -23,6 +23,7 @@ export type TdsConfig = {
   sharedSecret: string | null;
   keyId: string | null;
   siteId: string | null;
+  cloudflareProxyToken: string | null;
   timeoutMs: number;
   errorFallback: "site" | "target";
   configurationError: string | null;

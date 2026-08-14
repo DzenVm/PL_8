@@ -63,6 +63,7 @@ export function readTdsConfig(
   const configuredSharedSecret = rawSharedSecret === "" ? null : rawSharedSecret ?? null;
   const keyId = environment.TDS_KEY_ID || null;
   const siteId = environment.TDS_SITE_ID || null;
+  const cloudflareProxyToken = environment.TDS_CF_PROXY_TOKEN || null;
   const errorFallback = environment.TDS_ERROR_FALLBACK === "site" ? "site" : "target";
 
   let configurationError: string | null = null;
@@ -115,6 +116,7 @@ export function readTdsConfig(
     sharedSecret,
     keyId: decisionConfigurationError ? null : keyId,
     siteId: decisionConfigurationError ? null : siteId,
+    cloudflareProxyToken,
     timeoutMs: parseTimeout(environment.TDS_TIMEOUT_MS),
     errorFallback,
     configurationError,

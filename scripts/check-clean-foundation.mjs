@@ -68,7 +68,7 @@ const routingCorpus = (
 ).join("\n");
 assert.doesNotMatch(
   routingCorpus,
-  /googlebot|adsbot|bingbot|crawler|bot-score|cf-connecting-ip/i,
+  /googlebot|adsbot|bingbot|crawler|bot-score/i,
   "PL_8 must not contain its own crawler-specific routing branch",
 );
 
