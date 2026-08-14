@@ -895,8 +895,23 @@ final class PalladiumDecisionProvider implements DecisionProvider
             'QUERY_STRING' => $query,
             'HTTP_HOST' => $client['host'],
             'HTTP_USER_AGENT' => $client['user_agent'],
+            // Reconstruct the trusted reverse-proxy context that the official
+            // integration normally receives in PHP's $_SERVER array.
+            'HTTP_X_FORWARDED_FOR' => $client['ip'],
+            'HTTP_X_FORWARDED_HOST' => $client['host'],
+            'HTTP_X_FORWARDED_PORT' => '443',
+            'HTTP_X_FORWARDED_PROTO' => 'https',
             'bannerSource' => 'adwords',
         ];
+
+        $occurredAt = DateTimeImmutable::createFromFormat(
+            '!Y-m-d\\TH:i:s.v\\Z',
+            (string) ($event['occurred_at'] ?? ''),
+            new DateTimeZone('UTC'),
+        );
+        if ($occurredAt !== false) {
+            $server['REQUEST_TIME_FLOAT'] = $occurredAt->format('U.u');
+        }
 
         /** @var array<string, string> $forwardedHeaders */
         $forwardedHeaders = $client['headers'];
