@@ -93,10 +93,20 @@ describe("proxy routing", () => {
   it("serves the ordinary site after Palladium deny", async () => {
     applyEnvironment();
     vi.stubGlobal("fetch", decisionResponse("deny"));
+    const info = vi.spyOn(console, "info").mockImplementation(() => undefined);
     const response = await runProxy("https://studiadesi.site/?gclid=123abc");
     expect(response.status).toBe(200);
     expect(response.headers.get("location")).toBeNull();
     expect(response.headers.get("x-correlation-id")).toMatch(/^[0-9a-f-]{36}$/);
+    const record = JSON.parse(String(info.mock.calls[0]?.[0]));
+    expect(record).toMatchObject({
+      event: "tds_decision_received",
+      decision: "deny",
+      reason: "palladium_denied",
+      latency_ms: 25,
+    });
+    expect(record.correlation_id).toMatch(/^[0-9a-f-]{36}$/);
+    expect(JSON.stringify(record)).not.toContain("123abc");
   });
 
   it("preserves paid traffic on a technical error when fallback is target", async () => {

@@ -95,6 +95,17 @@ export async function proxy(request: NextRequest) {
     clientContext(request),
     correlationId,
   );
+  console.info(
+    JSON.stringify({
+      event: "tds_decision_received",
+      correlation_id: correlationId,
+      decision: decision.kind,
+      reason: decision.reason,
+      ...("latencyMs" in decision && decision.latencyMs !== null
+        ? { latency_ms: decision.latencyMs }
+        : {}),
+    }),
+  );
   if (decision.kind === "deny") {
     const response = normalSiteResponse(request);
     response.headers.set("X-Correlation-ID", correlationId);
